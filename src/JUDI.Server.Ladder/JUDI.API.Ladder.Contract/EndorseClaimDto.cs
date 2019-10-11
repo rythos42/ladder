@@ -2,7 +2,7 @@
 {
 	public class EndorseClaimDto
 	{
-		public string Endorser { get; set; }
+		public string EndorserUsername { get; set; }
 		public string EndorsementEvidence { get; set; }
 	}
 }

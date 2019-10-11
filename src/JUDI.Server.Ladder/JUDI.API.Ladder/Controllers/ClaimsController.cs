@@ -39,7 +39,7 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("{claimId}/endorse")]
 		public ActionResult Endorse(int claimId, EndorseClaimDto endorseClaimDto)
 		{
-			endorsementRepository.AddEndorsement(claimId, endorseClaimDto.Endorser, endorseClaimDto.EndorsementEvidence);
+			endorsementRepository.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.EndorsementEvidence);
 			return Ok();
 		}
 	}
