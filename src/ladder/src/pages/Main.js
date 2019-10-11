@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import SkillsTable from "./SkillsTable";
 import ClaimsTable from "./ClaimsTable";
@@ -28,6 +30,20 @@ class Main extends React.Component {
           <Paper className={styles.paper}>
             {this.props.showClaims ? <ClaimsTable /> : <SkillsTable />}
           </Paper>
+        </section>
+        <section className={styles.debugPanel}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={this.props.showDebug}
+                onChange={this.props.toggleShowDebug}
+              />
+            }
+            label="Debug auth"
+          />
+          {this.props.error && (
+            <p className="error">Error: {this.props.error}</p>
+          )}
         </section>
         {this.props.showDebug && (
           <section className="data">
@@ -67,7 +83,8 @@ function mapState({
 function mapDispatch(dispatch) {
   return {
     initializeAuth: dispatch.auth.initialize,
-    initializeData: dispatch.application.initialize
+    initializeData: dispatch.application.initialize,
+    toggleShowDebug: dispatch.auth.toggleShowDebug
   };
 }
 

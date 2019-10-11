@@ -2,6 +2,7 @@ import Api, { getConfig } from "../Api";
 
 export default {
   state: {
+    config: {},
     hasData: false,
     showClaims: false,
     skills: [],
@@ -46,6 +47,13 @@ export default {
         ...state,
         claims: state.claims.filter(claim => claim.id !== claimId)
       };
+    },
+    setConfig(state, config) {
+      return {
+        ...state,
+        config
+      };
+    },
     setApi(state, api) {
       return {
         ...state,
@@ -57,10 +65,19 @@ export default {
     async initialize(account, state) {
       if (state.auth.account && state.auth.account.userName) {
         const username = state.auth.account.userName;
+        const config = await dispatch.application.getConfig();
+        dispatch.application.setApi(new Api(config.serverUrl));
+
         await dispatch.application.getSkillsForUser(username);
         await dispatch.application.getClaimsForNotUser(username);
         dispatch.application.setHasData();
       }
+    },
+
+    async getConfig(_, state) {
+      const data = await getConfig();
+      dispatch.application.setConfig(data);
+      return data;
     },
 
     async getSkillsForUser(username, state) {
