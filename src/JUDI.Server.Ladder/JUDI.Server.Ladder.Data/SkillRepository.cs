@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JUDI.API.Ladder.Contract;
+using JUDI.Server.Ladder.Data.Entities;
 
 namespace JUDI.Server.Ladder.Data
 {
@@ -26,10 +28,22 @@ namespace JUDI.Server.Ladder.Data
 				   {
 					   Id = skill.Id,
 					   Summary = skill.Summary,
-					   Level = (Level) skill.Level,
+					   Level = skill.Level,
 					   Claimed = claim != null,
 					   Endorsed = endorsement != null
 				   };
+		}
+
+		public void Add(string addedByUsername, Level level, string summary)
+		{
+			dbContext.Skills.Add(new Skill
+			{
+				AddedByUsername = addedByUsername,
+				Level = level,
+				Summary = summary,
+				AddedOn = DateTime.Now
+			});
+			dbContext.SaveChanges();
 		}
 	}
 }

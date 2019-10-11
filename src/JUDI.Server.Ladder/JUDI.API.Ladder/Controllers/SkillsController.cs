@@ -24,5 +24,13 @@ namespace JUDI.API.Ladder.Controllers
 			var skills = skillRepository.Get(username).ToList();
 			return Ok(new OkResponse<List<SkillDto>>(skills));
 		}
+
+		[HttpPost]
+		[Route("")]
+		public ActionResult AddSkill(AddSkillDto addSkillDto)
+		{
+			skillRepository.Add(addSkillDto.Username, addSkillDto.Level, addSkillDto.Summary);
+			return Ok();
+		}
 	}
 }

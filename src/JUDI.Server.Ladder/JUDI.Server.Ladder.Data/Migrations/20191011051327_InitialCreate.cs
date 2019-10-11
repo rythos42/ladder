@@ -14,7 +14,9 @@ namespace JUDI.Server.Ladder.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Summary = table.Column<string>(nullable: true),
-                    Level = table.Column<int>(nullable: false)
+                    Level = table.Column<int>(nullable: false),
+                    AddedByUsername = table.Column<string>(nullable: true),
+                    AddedOn = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

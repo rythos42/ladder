@@ -2,10 +2,7 @@ WEB SERVICE
 - send e-mail to someone(s) to endorse a claim
 
 LATER
-- allow people to ask for skills to be added to database
-    - send e-mail to someone(s) to second that skill be added
-    - note difficulty of skill
-    - summary of skill
+- allow skills to be edited
 - badges for count of skills endorsed
 - badges for count of skills YOU endorsed for someone else
 - description of how the system is intended to be used

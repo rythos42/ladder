@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using JUDI.API.Ladder.Contract;
 
 namespace JUDI.Server.Ladder.Data.Entities
 {
@@ -7,6 +9,8 @@ namespace JUDI.Server.Ladder.Data.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public string Summary { get; set; }
-		public int Level { get; set; }
+		public Level Level { get; set; }
+		public string AddedByUsername { get; set; }
+		public DateTime AddedOn { get; set; }
 	}
 }

@@ -1,47 +1,78 @@
-const serverUrl = "https://localhost:5001";
-
-const endpoints = {
-  getSkillsForUser: username => `${serverUrl}/api/skills/${username}`,
-  claimSkill: username => `${serverUrl}/api/claims/${username}`,
-  getClaimsForNotUser: username => `${serverUrl}/api/claims/not/${username}`,
-  endorse: claimId => `${serverUrl}/api/claims/${claimId}/endorse`
-};
-
-export async function getSkillsForUser(username) {
-  const response = await fetch(endpoints.getSkillsForUser(username));
+export async function getConfig() {
+  const response = await fetch("config.json");
   const json = await response.json();
-  return json.data;
+  return json;
 }
 
-export async function claimSkill(
-  username,
-  skillId,
-  claimEvidence,
-  endorserEmails
-) {
-  await fetch(endpoints.claimSkill(username), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      skillId,
-      claimEvidence,
-      endorserEmails
-    })
-  });
+class Api {
+  serverUrl = "";
+  endpoints = {
+    getSkillsForUser: username => `${this.serverUrl}/api/skills/${username}`,
+    claimSkill: username => `${this.serverUrl}/api/claims/${username}`,
+    getClaimsForNotUser: username =>
+      `${this.serverUrl}/api/claims/not/${username}`,
+    endorse: claimId => `${this.serverUrl}/api/claims/${claimId}/endorse`,
+    addSkill: () => `${this.serverUrl}/api/skills`
+  };
+
+  constructor(serverUrl) {
+    this.serverUrl = serverUrl;
+  }
+
+  getSkillsForUser = async username => {
+    const response = await fetch(this.endpoints.getSkillsForUser(username));
+    const json = await response.json();
+    return json.data;
+  };
+
+  claimSkill = async (username, skillId, claimEvidence, endorserEmails) => {
+    await fetch(this.endpoints.claimSkill(username), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        skillId,
+        claimEvidence,
+        endorserEmails
+      })
+    });
+  };
+
+  getClaimsForNotUser = async username => {
+    const response = await fetch(this.endpoints.getClaimsForNotUser(username));
+    const json = await response.json();
+    return json.data;
+  };
+
+  endorse = async (endorserUsername, claimId, endorsementEvidence) => {
+    await fetch(this.endpoints.endorse(claimId), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ endorserUsername, endorsementEvidence })
+    });
+  };
+
+  addSkill = async (username, level, summary) => {
+    await fetch(this.endpoints.addSkill(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, level: this.levelToApi(level), summary })
+    });
+  };
+
+  levelToApi = level => {
+    switch (level) {
+      case "Low":
+        return 0;
+      case "Medium":
+        return 1;
+      case "High":
+        return 2;
+      default:
+        return -1;
+    }
+  };
 }
 
-export async function getClaimsForNotUser(username) {
-  const response = await fetch(endpoints.getClaimsForNotUser(username));
-  const json = await response.json();
-  return json.data;
-}
-
-export async function endorse(endorser, claimId, endorsementEvidence) {
-  await fetch(endpoints.endorse(claimId), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ endorser, endorsementEvidence })
-  });
-}
+export default Api;

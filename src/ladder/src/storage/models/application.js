@@ -1,11 +1,12 @@
-import * as api from "./../api";
+import Api, { getConfig } from "../Api";
 
 export default {
   state: {
     hasData: false,
     showClaims: false,
     skills: [],
-    claims: []
+    claims: [],
+    api: null
   },
   reducers: {
     setSkills(state, skills) {
@@ -45,6 +46,11 @@ export default {
         ...state,
         claims: state.claims.filter(claim => claim.id !== claimId)
       };
+    setApi(state, api) {
+      return {
+        ...state,
+        api
+      };
     }
   },
   effects: dispatch => ({
@@ -58,12 +64,12 @@ export default {
     },
 
     async getSkillsForUser(username, state) {
-      const data = await api.getSkillsForUser(username);
+      const data = await state.application.api.getSkillsForUser(username);
       dispatch.application.setSkills(data);
     },
 
     async getClaimsForNotUser(username, state) {
-      const data = await api.getClaimsForNotUser(username);
+      const data = await state.application.api.getClaimsForNotUser(username);
       dispatch.application.setClaims(data);
     },
 
@@ -71,7 +77,7 @@ export default {
       { claimingSkillId, claimEvidence, endorserEmails },
       state
     ) {
-      await api.claimSkill(
+      await state.application.api.claimSkill(
         state.auth.account.userName,
         claimingSkillId,
         claimEvidence,
@@ -89,12 +95,22 @@ export default {
     },
 
     async endorse({ claimId, endorsementEvidence }, state) {
-      await api.endorse(
+      await state.application.api.endorse(
         state.auth.account.userName,
         claimId,
         endorsementEvidence
       );
       dispatch.application.setClaimAsEndorsed(claimId);
+    },
+
+    async addSkill({ level, summary }, state) {
+      await state.application.api.addSkill(
+        state.auth.account.userName,
+        level,
+        summary
+      );
+
+      dispatch.application.getSkillsForUser(state.auth.account.userName);
     }
   })
 };

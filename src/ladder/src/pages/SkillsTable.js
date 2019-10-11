@@ -65,6 +65,19 @@ class SkillsTable extends React.Component {
     { label: "Endorsed", id: "endorsed" }
   ];
 
+  apiToLevel = apiLevel => {
+    switch (apiLevel) {
+      case 0:
+        return "Low";
+      case 1:
+        return "Medium";
+      case 2:
+        return "High";
+      default:
+        return "";
+    }
+  };
+
   render() {
     return (
       <>
@@ -85,7 +98,7 @@ class SkillsTable extends React.Component {
               .map(skill => (
                 <TableRow key={skill.id}>
                   <TableCell>{skill.summary}</TableCell>
-                  <TableCell>{skill.level}</TableCell>
+                  <TableCell>{this.apiToLevel(skill.level)}</TableCell>
                   <TableCell>
                     {skill.claimed ? (
                       <CheckIcon />

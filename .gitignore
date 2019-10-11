@@ -27,3 +27,4 @@ bin
 obj
 *.user
 build
+*.pubxml
