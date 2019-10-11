@@ -60,7 +60,9 @@ class Header extends React.Component {
               )}
             </Grid>
             <Grid container item xs={6} justify="flex-end">
-              <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
+              {this.props.hasAccount && (
+                <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
+              )}
               {!this.props.account ? (
                 <Button onClick={this.props.requestSignIn}>Sign In</Button>
               ) : (
@@ -102,8 +104,8 @@ class Header extends React.Component {
   }
 }
 
-function mapState({ application: { showClaims } }) {
-  return { showClaims };
+function mapState({ application: { showClaims }, auth: { account } }) {
+  return { showClaims, hasAccount: account !== null };
 }
 
 function mapDispatch({ application, auth }) {
