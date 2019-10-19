@@ -15,6 +15,7 @@ class SortableTableHead extends React.Component {
               sortDirection={
                 this.props.orderBy === tableHeader.id ? this.props.order : false
               }
+              className={tableHeader.className}
             >
               <TableSortLabel
                 active={this.props.orderBy === tableHeader.id}

@@ -25,7 +25,8 @@ namespace JUDI.Server.Ladder.Data
 				   {
 					   Id = claim.Id,
 					   FromUsername = claim.ClaimingUsername,
-					   SkillSummary = skill.Summary
+					   SkillSummary = skill.Summary,
+					   ClaimEvidence = claim.ClaimEvidence
 				   };
 		}
 

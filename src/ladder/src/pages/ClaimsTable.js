@@ -10,9 +10,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
+import Collapse from "@material-ui/core/Collapse";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import * as tableHelper from "./../TableHelper";
 import SortableTableHead from "./../components/SortableTableHead";
+import styles from "./ClaimsTable.module.css";
 
 class ClaimsTable extends React.Component {
   state = {
@@ -20,7 +24,8 @@ class ClaimsTable extends React.Component {
     selectedClaimId: -1,
     endorsementEvidence: "",
     order: "asc",
-    orderBy: "Summary"
+    orderBy: "Summary",
+    expandedRow: null
   };
 
   openEndorsementDialog = claimId => {
@@ -50,11 +55,17 @@ class ClaimsTable extends React.Component {
     this.setState({ orderBy: property });
   };
 
+  handleRowClick = claimId => {
+    if (this.state.expandedRow === claimId)
+      this.setState({ expandedRow: null });
+    else this.setState({ expandedRow: claimId });
+  };
+
   tableHeaders = [
+    { label: "", id: "expand", className: styles.expandColumn },
+    { label: "User", id: "user" },
     { label: "Summary", id: "summary" },
-    { label: "Level", id: "level" },
-    { label: "Claimed", id: "claimed" },
-    { label: "Endorsed", id: "endorsed" }
+    { label: "", id: "endorse" }
   ];
 
   render() {
@@ -82,17 +93,48 @@ class ClaimsTable extends React.Component {
                 this.state.orderBy
               )
               .map(claim => (
-                <TableRow key={claim.id}>
-                  <TableCell>{claim.fromUsername}</TableCell>
-                  <TableCell>{claim.skillSummary}</TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => this.openEndorsementDialog(claim.id)}
-                    >
-                      Endorse
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                <React.Fragment key={claim.id}>
+                  <TableRow
+                    onClick={() => this.handleRowClick(claim.id)}
+                    hover
+                    className={
+                      styles.tableRow +
+                      " " +
+                      (this.state.expandedRow === claim.id
+                        ? styles.expandedRow
+                        : "")
+                    }
+                  >
+                    <TableCell className={styles.expandColumn}>
+                      {this.state.expandedRow === claim.id ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
+                    </TableCell>
+                    <TableCell>{claim.fromUsername}</TableCell>
+                    <TableCell>{claim.skillSummary}</TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => this.openEndorsementDialog(claim.id)}
+                      >
+                        Endorse
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className={styles.expandableRow}></TableCell>
+                    <TableCell colSpan={3} className={styles.expandableRow}>
+                      <Collapse
+                        in={this.state.expandedRow === claim.id}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        {claim.claimEvidence}
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
               ))}
           </TableBody>
         </Table>

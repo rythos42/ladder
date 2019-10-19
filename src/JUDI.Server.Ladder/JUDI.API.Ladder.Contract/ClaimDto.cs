@@ -5,5 +5,6 @@
 		public int Id { get; set; }
 		public string FromUsername { get; set; }
 		public string SkillSummary { get; set; }
+		public string ClaimEvidence { get; set; }
 	}
 }

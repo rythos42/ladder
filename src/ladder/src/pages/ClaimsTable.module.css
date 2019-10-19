@@ -1,0 +1,16 @@
+.tableRow {
+  cursor: pointer;
+}
+
+.expandableRow {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.expandedRow > td {
+  border-bottom: 0;
+}
+
+.expandColumn {
+  padding: 16px !important;
+}
