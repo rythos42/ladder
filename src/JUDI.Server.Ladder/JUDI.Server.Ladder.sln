@@ -8,12 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{15D827C7-EC09-4473-8AA8-3E89B5B395AD}"
 	ProjectSection(SolutionItems) = preProject
 		.editorConfig = .editorConfig
-		..\..\notes.txt = ..\..\notes.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JUDI.Server.Ladder.Data", "JUDI.Server.Ladder.Data\JUDI.Server.Ladder.Data.csproj", "{4BBB201A-CFE0-4D5B-8A39-28FB53ECEF37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JUDI.API.Ladder.Contract", "JUDI.API.Ladder.Contract\JUDI.API.Ladder.Contract.csproj", "{ABCBB397-BA76-4C12-9D3E-5D4818AF1433}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JUDI.API.Ladder.Contract", "JUDI.API.Ladder.Contract\JUDI.API.Ladder.Contract.csproj", "{ABCBB397-BA76-4C12-9D3E-5D4818AF1433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
