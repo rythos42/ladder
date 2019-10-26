@@ -28,3 +28,5 @@ obj
 *.user
 build
 *.pubxml
+settings.json
+appsettings*.json
