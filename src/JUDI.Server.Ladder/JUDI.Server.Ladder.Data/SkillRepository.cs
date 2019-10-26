@@ -45,5 +45,13 @@ namespace JUDI.Server.Ladder.Data
 			});
 			dbContext.SaveChanges();
 		}
+
+		public void Update(string updatedByUsername, int skillId, Level level, string summary)
+		{
+			Skill skillToUpdate = dbContext.Skills.Find(skillId);
+			skillToUpdate.Level = level;
+			skillToUpdate.Summary = summary;
+			dbContext.SaveChanges();
+		}
 	}
 }

@@ -128,6 +128,16 @@ export default {
       );
 
       dispatch.application.getSkillsForUser(state.auth.account.userName);
+    },
+
+    async editSkill({ skillId, level, summary }, state) {
+      await state.application.api.editSkill(
+        state.auth.account.userName,
+        skillId,
+        level,
+        summary
+      );
+      dispatch.application.getSkillsForUser(state.auth.account.userName);
     }
   })
 };

@@ -15,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import * as tableHelper from "./../TableHelper";
 import SortableTableHead from "./../components/SortableTableHead";
+import EditSkillDialog from "./../components/EditSkillDialog";
 
 class SkillsTable extends React.Component {
   state = {
@@ -23,7 +24,13 @@ class SkillsTable extends React.Component {
     claimEvidence: "",
     endorserEmails: "",
     order: "asc",
-    orderBy: "Summary"
+    orderBy: "Summary",
+    editSkillDialogOpen: false,
+    editingSkill: {
+      id: -1,
+      level: "",
+      summary: ""
+    }
   };
 
   openClaimSkillDialog = skillId => {
@@ -51,6 +58,26 @@ class SkillsTable extends React.Component {
     this.closeClaimSkillDialog();
   };
 
+  openEditSkillDialog = (id, level, summary) => {
+    this.setState({
+      editSkillDialogOpen: true,
+      editingSkill: { id, level, summary }
+    });
+  };
+
+  closeEditSkillDialog = () => {
+    this.setState({ editSkillDialogOpen: false });
+  };
+
+  editSkill = (level, summary) => {
+    this.props.editSkill({
+      skillId: this.state.editingSkill.id,
+      level,
+      summary
+    });
+    this.closeEditSkillDialog();
+  };
+
   handleRequestSort = property => {
     const isDesc =
       this.state.orderBy === property && this.state.order === "desc";
@@ -62,21 +89,9 @@ class SkillsTable extends React.Component {
     { label: "Summary", id: "summary" },
     { label: "Level", id: "level" },
     { label: "Claimed", id: "claimed" },
-    { label: "Endorsed", id: "endorsed" }
+    { label: "Endorsed", id: "endorsed" },
+    { label: "", id: "actions" }
   ];
-
-  apiToLevel = apiLevel => {
-    switch (apiLevel) {
-      case 0:
-        return "Low";
-      case 1:
-        return "Medium";
-      case 2:
-        return "High";
-      default:
-        return "";
-    }
-  };
 
   render() {
     return (
@@ -98,7 +113,7 @@ class SkillsTable extends React.Component {
               .map(skill => (
                 <TableRow key={skill.id}>
                   <TableCell>{skill.summary}</TableCell>
-                  <TableCell>{this.apiToLevel(skill.level)}</TableCell>
+                  <TableCell>{skill.level}</TableCell>
                   <TableCell>
                     {skill.claimed ? (
                       <CheckIcon />
@@ -112,6 +127,19 @@ class SkillsTable extends React.Component {
                   </TableCell>
                   <TableCell>
                     {skill.endorsed ? <CheckIcon /> : <CloseIcon />}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() =>
+                        this.openEditSkillDialog(
+                          skill.id,
+                          skill.level,
+                          skill.summary
+                        )
+                      }
+                    >
+                      Edit
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -145,6 +173,14 @@ class SkillsTable extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <EditSkillDialog
+          confirmButtonLabel="Edit Skill"
+          onConfirm={this.editSkill}
+          onClose={this.closeEditSkillDialog}
+          open={this.state.editSkillDialogOpen}
+          level={this.state.editingSkill.level}
+          summary={this.state.editingSkill.summary}
+        />
       </>
     );
   }
@@ -156,7 +192,8 @@ function mapState({ application: { skills } }) {
 
 function mapDispatch({ application }) {
   return {
-    claimSkill: application.claimSkill
+    claimSkill: application.claimSkill,
+    editSkill: application.editSkill
   };
 }
 

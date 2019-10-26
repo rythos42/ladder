@@ -12,7 +12,8 @@ class Api {
     getClaimsForNotUser: username =>
       `${this.serverUrl}/api/claims/not/${username}`,
     endorse: claimId => `${this.serverUrl}/api/claims/${claimId}/endorse`,
-    addSkill: () => `${this.serverUrl}/api/skills`
+    addSkill: () => `${this.serverUrl}/api/skills`,
+    editSkill: () => `${this.serverUrl}/api/skills`
   };
 
   constructor(serverUrl) {
@@ -22,6 +23,11 @@ class Api {
   getSkillsForUser = async username => {
     const response = await fetch(this.endpoints.getSkillsForUser(username));
     const json = await response.json();
+
+    json.data.forEach(skill => {
+      skill.level = this.apiToLevel(skill.level);
+    });
+
     return json.data;
   };
 
@@ -61,6 +67,19 @@ class Api {
     });
   };
 
+  editSkill = async (username, skillId, level, summary) => {
+    await fetch(this.endpoints.editSkill(), {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        patchedByUsername: username,
+        skillId,
+        level: this.levelToApi(level),
+        summary
+      })
+    });
+  };
+
   levelToApi = level => {
     switch (level) {
       case "Low":
@@ -71,6 +90,19 @@ class Api {
         return 2;
       default:
         return -1;
+    }
+  };
+
+  apiToLevel = apiLevel => {
+    switch (apiLevel) {
+      case 0:
+        return "Low";
+      case 1:
+        return "Medium";
+      case 2:
+        return "High";
+      default:
+        return "";
     }
   };
 }

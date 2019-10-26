@@ -32,5 +32,13 @@ namespace JUDI.API.Ladder.Controllers
 			skillRepository.Add(addSkillDto.Username, addSkillDto.Level, addSkillDto.Summary);
 			return Ok();
 		}
+
+		[HttpPatch]
+		[Route("")]
+		public ActionResult PatchSkill(PatchSkillDto patchSkillDto)
+		{
+			skillRepository.Update(patchSkillDto.PatchedByUsername, patchSkillDto.SkillId, patchSkillDto.Level, patchSkillDto.Summary);
+			return Ok();
+		}
 	}
 }
