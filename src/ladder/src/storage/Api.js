@@ -26,6 +26,7 @@ class Api {
 
     json.data.forEach(skill => {
       skill.level = this.apiToLevel(skill.level);
+      skill.summary = skill.summary || "";
     });
 
     return json.data;

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
@@ -26,10 +25,8 @@ class Main extends React.Component {
     return (
       <>
         <Header error={this.props.error} account={this.props.account} />
-        <section>
-          <Paper className={styles.paper}>
-            {this.props.showClaims ? <ClaimsTable /> : <SkillsTable />}
-          </Paper>
+        <section className={styles.main}>
+          {this.props.showClaims ? <ClaimsTable /> : <SkillsTable />}
         </section>
         <section className={styles.debugPanel}>
           <FormControlLabel

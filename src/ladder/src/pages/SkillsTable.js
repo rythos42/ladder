@@ -10,12 +10,16 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 
 import * as tableHelper from "./../TableHelper";
 import SortableTableHead from "./../components/SortableTableHead";
 import EditSkillDialog from "./../components/EditSkillDialog";
+import styles from "./SkillsTable.module.css";
 
 class SkillsTable extends React.Component {
   state = {
@@ -29,6 +33,9 @@ class SkillsTable extends React.Component {
     editingSkill: {
       id: -1,
       level: "",
+      summary: ""
+    },
+    filter: {
       summary: ""
     }
   };
@@ -85,6 +92,10 @@ class SkillsTable extends React.Component {
     this.setState({ orderBy: property });
   };
 
+  setSummaryFilter = evt => {
+    this.setState({ filter: { summary: evt.target.value.toLowerCase() } });
+  };
+
   tableHeaders = [
     { label: "Summary", id: "summary" },
     { label: "Level", id: "level" },
@@ -96,55 +107,71 @@ class SkillsTable extends React.Component {
   render() {
     return (
       <>
-        <Table>
-          <SortableTableHead
-            tableHeaders={this.tableHeaders}
-            order={this.state.order}
-            orderBy={this.state.orderBy}
-            onRequestSort={this.handleRequestSort}
-          />
-          <TableBody>
-            {tableHelper
-              .stableSort(
-                this.props.skills,
-                this.state.order,
-                this.state.orderBy
-              )
-              .map(skill => (
-                <TableRow key={skill.id}>
-                  <TableCell>{skill.summary}</TableCell>
-                  <TableCell>{skill.level}</TableCell>
-                  <TableCell>
-                    {skill.claimed ? (
-                      <CheckIcon />
-                    ) : (
-                      <Button
-                        onClick={() => this.openClaimSkillDialog(skill.id)}
-                      >
-                        Claim
-                      </Button>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {skill.endorsed ? <CheckIcon /> : <CloseIcon />}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() =>
-                        this.openEditSkillDialog(
-                          skill.id,
-                          skill.level,
-                          skill.summary
-                        )
-                      }
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card className={styles.filter}>
+              <Typography>Filter</Typography>
+              <TextField onChange={this.setSummaryFilter} label="Summary" />
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Table>
+              <SortableTableHead
+                tableHeaders={this.tableHeaders}
+                order={this.state.order}
+                orderBy={this.state.orderBy}
+                onRequestSort={this.handleRequestSort}
+              />
+              <TableBody>
+                {tableHelper
+                  .stableSort(
+                    this.props.skills,
+                    this.state.order,
+                    this.state.orderBy
+                  )
+                  .filter(
+                    skill =>
+                      skill.summary
+                        .toLowerCase()
+                        .indexOf(this.state.filter.summary) !== -1
+                  )
+                  .map(skill => (
+                    <TableRow key={skill.id}>
+                      <TableCell>{skill.summary}</TableCell>
+                      <TableCell>{skill.level}</TableCell>
+                      <TableCell>
+                        {skill.claimed ? (
+                          <CheckIcon />
+                        ) : (
+                          <Button
+                            onClick={() => this.openClaimSkillDialog(skill.id)}
+                          >
+                            Claim
+                          </Button>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {skill.endorsed ? <CheckIcon /> : <CloseIcon />}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={() =>
+                            this.openEditSkillDialog(
+                              skill.id,
+                              skill.level,
+                              skill.summary
+                            )
+                          }
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Grid>
         <Dialog
           onClose={this.closeClaimSkillDialog}
           open={this.state.claimSkillDialogOpen}
