@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Checkbox from "@material-ui/core/Checkbox";
+import Snackbar from "@material-ui/core/Snackbar";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import SkillsTable from "./SkillsTable";
@@ -12,14 +13,26 @@ import styles from "./Main.module.css";
 const Json = ({ data }) => <pre>{JSON.stringify(data, null, 4)}</pre>;
 
 class Main extends React.Component {
+  state = {
+    snackbarOpen: false
+  };
+
   async componentDidMount() {
     await this.props.initializeAuth();
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     if (!this.props.hasData && this.props.account)
       await this.props.initializeData();
+
+    if (prevProps.snackbarMessage !== this.props.snackbarMessage) {
+      this.setState({ snackbarOpen: true });
+    }
   }
+
+  handleSnackbarClose = () => {
+    this.setState({ snackbarOpen: false });
+  };
 
   render() {
     return (
@@ -41,6 +54,17 @@ class Main extends React.Component {
           {this.props.error && (
             <p className="error">Error: {this.props.error}</p>
           )}
+        </section>
+        <section>
+          <Snackbar
+            open={this.state.snackbarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleSnackbarClose}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.props.snackbarMessage}</span>}
+          />
         </section>
         {this.props.showDebug && (
           <section className="data">
@@ -64,7 +88,7 @@ class Main extends React.Component {
 }
 
 function mapState({
-  application: { hasData, showClaims },
+  application: { hasData, showClaims, snackbarMessage },
   auth: { account, graphProfile, error, showDebug }
 }) {
   return {
@@ -73,7 +97,8 @@ function mapState({
     error,
     showDebug,
     hasData,
-    showClaims
+    showClaims,
+    snackbarMessage
   };
 }
 

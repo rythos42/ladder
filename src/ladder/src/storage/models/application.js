@@ -7,7 +7,8 @@ export default {
     showClaims: false,
     skills: [],
     claims: [],
-    api: null
+    api: null,
+    snackbarMessage: ""
   },
   reducers: {
     setSkills(state, skills) {
@@ -59,6 +60,12 @@ export default {
         ...state,
         api
       };
+    },
+    setSnackbarMessage(state, snackbarMessage) {
+      return {
+        ...state,
+        snackbarMessage
+      };
     }
   },
   effects: dispatch => ({
@@ -101,6 +108,7 @@ export default {
         endorserEmails
       );
       dispatch.application.setSkillAsClaimed(claimingSkillId);
+      dispatch.application.setSnackbarMessage("Claimed skill.");
     },
 
     showClaims() {
@@ -118,6 +126,7 @@ export default {
         endorsementEvidence
       );
       dispatch.application.setClaimAsEndorsed(claimId);
+      dispatch.application.setSnackbarMessage("Endorsed skill.");
     },
 
     async addSkill({ level, summary }, state) {
@@ -128,6 +137,7 @@ export default {
       );
 
       dispatch.application.getSkillsForUser(state.auth.account.userName);
+      dispatch.application.setSnackbarMessage("Added skill.");
     },
 
     async editSkill({ skillId, level, summary }, state) {
