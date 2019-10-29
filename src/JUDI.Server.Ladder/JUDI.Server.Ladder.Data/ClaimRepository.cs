@@ -42,5 +42,10 @@ namespace JUDI.Server.Ladder.Data
 			});
 			dbContext.SaveChanges();
 		}
+
+		public int GetClaimCountForUser(string username)
+		{
+			return dbContext.Claims.Count(claim => claim.ClaimingUsername == username);
+		}
 	}
 }

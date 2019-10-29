@@ -4,8 +4,12 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Badge from "@material-ui/core/Badge";
 
 import EditSkillDialog from "./EditSkillDialog";
+import EndorsementsIcon from "./endorsements.png";
+import SkillsIcon from "./skills.png";
+import styles from "./Header.module.css";
 
 class Header extends React.Component {
   state = {
@@ -42,6 +46,25 @@ class Header extends React.Component {
               )}
             </Grid>
             <Grid container item xs={6} justify="flex-end">
+              <div className={styles.iconPanel}>
+                <Badge badgeContent={this.props.claimCount} color="primary">
+                  <img
+                    src={EndorsementsIcon}
+                    alt="Count of endorsements you've given to other people."
+                    title="Count of endorsements you've given to other people."
+                  />
+                </Badge>
+                <Badge
+                  badgeContent={this.props.endorsementCount}
+                  color="primary"
+                >
+                  <img
+                    src={SkillsIcon}
+                    alt="Count of your claimed skills."
+                    title="Count of your claimed skills."
+                  />
+                </Badge>
+              </div>
               {this.props.hasAccount && (
                 <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
               )}
@@ -64,8 +87,19 @@ class Header extends React.Component {
   }
 }
 
-function mapState({ application: { showClaims }, auth: { account } }) {
-  return { showClaims, hasAccount: account !== null };
+function mapState({
+  application: {
+    showClaims,
+    userProfile: { claimCount, endorsementCount }
+  },
+  auth: { account }
+}) {
+  return {
+    showClaims,
+    hasAccount: account !== null,
+    claimCount: claimCount || 0,
+    endorsementCount: endorsementCount || 0
+  };
 }
 
 function mapDispatch({ application, auth }) {

@@ -1,0 +1,8 @@
+.iconPanel img {
+  height: 43px; /* Largest size that fits in toolbar with 8px top/bottom margin without increasing the overall toolbar size */
+}
+
+.iconPanel > span {
+  /* badges are in span */
+  margin-right: 8px;
+}

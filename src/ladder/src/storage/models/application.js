@@ -8,7 +8,8 @@ export default {
     skills: [],
     claims: [],
     api: null,
-    snackbarMessage: ""
+    snackbarMessage: "",
+    userProfile: {}
   },
   reducers: {
     setSkills(state, skills) {
@@ -66,6 +67,12 @@ export default {
         ...state,
         snackbarMessage
       };
+    },
+    setUserProfile(state, userProfile) {
+      return {
+        ...state,
+        userProfile
+      };
     }
   },
   effects: dispatch => ({
@@ -77,6 +84,7 @@ export default {
 
         await dispatch.application.getSkillsForUser(username);
         await dispatch.application.getClaimsForNotUser(username);
+        await dispatch.application.getUserProfile(username);
         dispatch.application.setHasData();
       }
     },
@@ -148,6 +156,11 @@ export default {
         summary
       );
       dispatch.application.getSkillsForUser(state.auth.account.userName);
+    },
+
+    async getUserProfile(username, state) {
+      const data = await state.application.api.getUserProfile(username);
+      dispatch.application.setUserProfile(data);
     }
   })
 };

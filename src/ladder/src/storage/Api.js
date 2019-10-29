@@ -13,7 +13,8 @@ class Api {
       `${this.serverUrl}/api/claims/not/${username}`,
     endorse: claimId => `${this.serverUrl}/api/claims/${claimId}/endorse`,
     addSkill: () => `${this.serverUrl}/api/skills`,
-    editSkill: () => `${this.serverUrl}/api/skills`
+    editSkill: () => `${this.serverUrl}/api/skills`,
+    getUserProfile: username => `${this.serverUrl}/api/user/${username}`
   };
 
   constructor(serverUrl) {
@@ -79,6 +80,12 @@ class Api {
         summary
       })
     });
+  };
+
+  getUserProfile = async username => {
+    const response = await fetch(this.endpoints.getUserProfile(username));
+    const json = await response.json();
+    return json.data;
   };
 
   levelToApi = level => {

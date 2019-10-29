@@ -29,7 +29,7 @@ namespace JUDI.API.Ladder
 			services.AddScoped<EndorsementRepository>();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
