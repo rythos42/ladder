@@ -12,6 +12,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
 import Typography from "@material-ui/core/Typography";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
@@ -36,7 +40,8 @@ class SkillsTable extends React.Component {
       summary: ""
     },
     filter: {
-      summary: ""
+      summary: "",
+      levelId: -1
     }
   };
 
@@ -93,7 +98,18 @@ class SkillsTable extends React.Component {
   };
 
   setSummaryFilter = evt => {
-    this.setState({ filter: { summary: evt.target.value.toLowerCase() } });
+    this.setState({
+      filter: {
+        summary: evt.target.value.toLowerCase(),
+        levelId: this.state.filter.levelId
+      }
+    });
+  };
+
+  setLevelFilter = evt => {
+    this.setState({
+      filter: { summary: this.state.filter.summary, levelId: evt.target.value }
+    });
   };
 
   tableHeaders = [
@@ -111,7 +127,28 @@ class SkillsTable extends React.Component {
           <Grid item xs={12}>
             <Card className={styles.filter}>
               <Typography>Filter</Typography>
-              <TextField onChange={this.setSummaryFilter} label="Summary" />
+              <TextField
+                margin="normal"
+                onChange={this.setSummaryFilter}
+                label="Summary"
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
+              <FormControl margin="normal">
+                <InputLabel>Level</InputLabel>
+                <Select
+                  onChange={this.setLevelFilter}
+                  value={this.state.filter.levelId}
+                >
+                  <MenuItem value={-1}>None</MenuItem>
+                  {this.props.levels.map(level => (
+                    <MenuItem key={level.id} value={level.id}>
+                      {level.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Card>
           </Grid>
           <Grid item xs={12}>
@@ -133,7 +170,9 @@ class SkillsTable extends React.Component {
                     skill =>
                       skill.summary
                         .toLowerCase()
-                        .indexOf(this.state.filter.summary) !== -1
+                        .indexOf(this.state.filter.summary) !== -1 &&
+                      (this.state.filter.levelId === -1 ||
+                        skill.level.id === this.state.filter.levelId)
                   )
                   .map(skill => (
                     <TableRow key={skill.id}>
@@ -213,8 +252,8 @@ class SkillsTable extends React.Component {
   }
 }
 
-function mapState({ application: { skills } }) {
-  return { skills };
+function mapState({ application: { skills, levels } }) {
+  return { skills, levels };
 }
 
 function mapDispatch({ application }) {
