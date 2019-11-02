@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JUDI.API.Ladder.Contract;
 using JUDI.Server.Ladder.Data;
@@ -29,6 +30,9 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("")]
 		public ActionResult AddSkill(AddSkillDto addSkillDto)
 		{
+			if (addSkillDto == null)
+				throw new ArgumentNullException(nameof(addSkillDto));
+
 			skillRepository.Add(addSkillDto.Username, addSkillDto.Level, addSkillDto.Summary);
 			return Ok();
 		}
@@ -37,6 +41,9 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("")]
 		public ActionResult PatchSkill(PatchSkillDto patchSkillDto)
 		{
+			if (patchSkillDto == null)
+				throw new ArgumentNullException(nameof(patchSkillDto));
+
 			skillRepository.Update(patchSkillDto.PatchedByUsername, patchSkillDto.SkillId, patchSkillDto.Level, patchSkillDto.Summary);
 			return Ok();
 		}

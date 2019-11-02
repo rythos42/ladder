@@ -31,6 +31,8 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("{username}")]
 		public ActionResult Claim(string username, ClaimSkillDto claimSkillDto)
 		{
+			if (claimSkillDto == null)
+				throw new ArgumentNullException(nameof(claimSkillDto));
 			claimRepository.AddClaim(username, claimSkillDto.SkillId, claimSkillDto.ClaimEvidence, claimSkillDto.EndorserEmails);
 			return Ok();
 		}
@@ -39,6 +41,9 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("{claimId}/endorse")]
 		public ActionResult Endorse(int claimId, EndorseClaimDto endorseClaimDto)
 		{
+			if (endorseClaimDto == null)
+				throw new ArgumentNullException(nameof(endorseClaimDto));
+
 			endorsementRepository.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.EndorsementEvidence);
 			return Ok();
 		}
