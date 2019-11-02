@@ -47,7 +47,11 @@ class Header extends React.Component {
             </Grid>
             <Grid container item xs={6} justify="flex-end">
               <div className={styles.iconPanel}>
-                <Badge badgeContent={this.props.claimCount} color="primary">
+                <Badge
+                  showZero={true}
+                  badgeContent={this.props.claimCount}
+                  color="primary"
+                >
                   <img
                     src={EndorsementsIcon}
                     alt="Count of endorsements you've given to other people."
@@ -55,6 +59,7 @@ class Header extends React.Component {
                   />
                 </Badge>
                 <Badge
+                  showZero={true}
                   badgeContent={this.props.endorsementCount}
                   color="primary"
                 >
