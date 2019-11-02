@@ -1,4 +1,5 @@
-﻿using JUDI.Server.Ladder.Data;
+﻿using JUDI.Server.Ladder.Business;
+using JUDI.Server.Ladder.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,15 @@ namespace JUDI.API.Ladder
 			services.AddScoped<SkillRepository>();
 			services.AddScoped<ClaimRepository>();
 			services.AddScoped<EndorsementRepository>();
+			services.AddScoped<EmailManager>();
+
+			var emailConfiguration = new EmailConfiguration();
+			Configuration.Bind("Email", emailConfiguration);
+			services.AddSingleton(emailConfiguration);
+
+			var applicationConfiguration = new ApplicationConfiguration();
+			Configuration.Bind("Application", applicationConfiguration);
+			services.AddSingleton(applicationConfiguration);
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
