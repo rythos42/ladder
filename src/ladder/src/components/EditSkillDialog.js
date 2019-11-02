@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -11,11 +12,11 @@ import Button from "@material-ui/core/Button";
 class EditSkillDialog extends React.Component {
   state = {
     summary: "",
-    level: ""
+    levelId: -1
   };
 
-  changeLevel = evt => {
-    this.setState({ level: evt.target.value });
+  changeLevelId = evt => {
+    this.setState({ levelId: evt.target.value });
   };
 
   setSummary = evt => {
@@ -24,10 +25,13 @@ class EditSkillDialog extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.level !== this.props.level ||
+      prevProps.levelId !== this.props.levelId ||
       prevProps.summary !== this.props.summary
     )
-      this.setState({ summary: this.props.summary, level: this.props.level });
+      this.setState({
+        summary: this.props.summary,
+        levelId: this.props.levelId
+      });
   }
 
   render() {
@@ -40,10 +44,12 @@ class EditSkillDialog extends React.Component {
       >
         <DialogTitle>{this.props.confirmButtonLabel}</DialogTitle>
         <DialogContent>
-          <Select onChange={this.changeLevel} value={this.state.level}>
-            <MenuItem value="Low">Low</MenuItem>
-            <MenuItem value="Medium">Medium</MenuItem>
-            <MenuItem value="High">High</MenuItem>
+          <Select onChange={this.changeLevelId} value={this.state.levelId}>
+            {this.props.levels.map(level => (
+              <MenuItem key={level.id} value={level.id}>
+                {level.name}
+              </MenuItem>
+            ))}
           </Select>
           <TextField
             multiline
@@ -58,7 +64,7 @@ class EditSkillDialog extends React.Component {
           <Button onClick={this.props.onClose}>Cancel</Button>
           <Button
             onClick={() =>
-              this.props.onConfirm(this.state.level, this.state.summary)
+              this.props.onConfirm(this.state.levelId, this.state.summary)
             }
             variant="contained"
           >
@@ -70,4 +76,8 @@ class EditSkillDialog extends React.Component {
   }
 }
 
-export default EditSkillDialog;
+function mapState({ application: { levels } }) {
+  return { levels };
+}
+
+export default connect(mapState)(EditSkillDialog);

@@ -9,10 +9,12 @@ namespace JUDI.Server.Ladder.Data
 	public class SkillRepository
 	{
 		private readonly LadderDbContext dbContext;
+		private readonly LevelRepository levelRepository;
 
-		public SkillRepository(LadderDbContext dbContext)
+		public SkillRepository(LadderDbContext dbContext, LevelRepository levelRepository)
 		{
 			this.dbContext = dbContext;
+			this.levelRepository = levelRepository;
 		}
 
 		public IEnumerable<SkillDto> Get(string username)
@@ -28,28 +30,28 @@ namespace JUDI.Server.Ladder.Data
 				   {
 					   Id = skill.Id,
 					   Summary = skill.Summary,
-					   Level = skill.Level,
+					   LevelId = skill.Level.Id,
 					   Claimed = claim != null,
 					   Endorsed = endorsement != null
 				   };
 		}
 
-		public void Add(string addedByUsername, Level level, string summary)
+		public void Add(string addedByUsername, int levelId, string summary)
 		{
 			dbContext.Skills.Add(new Skill
 			{
 				AddedByUsername = addedByUsername,
-				Level = level,
+				Level = levelRepository.Get(levelId),
 				Summary = summary,
 				AddedOn = DateTime.Now
 			});
 			dbContext.SaveChanges();
 		}
 
-		public void Update(string updatedByUsername, int skillId, Level level, string summary)
+		public void Update(string updatedByUsername, int skillId, int levelId, string summary)
 		{
 			Skill skillToUpdate = dbContext.Skills.Find(skillId);
-			skillToUpdate.Level = level;
+			skillToUpdate.Level = levelRepository.Get(levelId);
 			skillToUpdate.Summary = summary;
 			dbContext.SaveChanges();
 		}

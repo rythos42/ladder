@@ -4,14 +4,16 @@ using JUDI.Server.Ladder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JUDI.Server.Ladder.Data.Migrations
 {
     [DbContext(typeof(LadderDbContext))]
-    partial class LadderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191102204158_AddLevelEntity")]
+    partial class AddLevelEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

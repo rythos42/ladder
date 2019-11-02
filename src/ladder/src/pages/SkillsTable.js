@@ -32,7 +32,7 @@ class SkillsTable extends React.Component {
     editSkillDialogOpen: false,
     editingSkill: {
       id: -1,
-      level: "",
+      levelId: -1,
       summary: ""
     },
     filter: {
@@ -65,10 +65,10 @@ class SkillsTable extends React.Component {
     this.closeClaimSkillDialog();
   };
 
-  openEditSkillDialog = (id, level, summary) => {
+  openEditSkillDialog = (id, levelId, summary) => {
     this.setState({
       editSkillDialogOpen: true,
-      editingSkill: { id, level, summary }
+      editingSkill: { id, levelId, summary }
     });
   };
 
@@ -76,10 +76,10 @@ class SkillsTable extends React.Component {
     this.setState({ editSkillDialogOpen: false });
   };
 
-  editSkill = (level, summary) => {
+  editSkill = (levelId, summary) => {
     this.props.editSkill({
       skillId: this.state.editingSkill.id,
-      level,
+      levelId,
       summary
     });
     this.closeEditSkillDialog();
@@ -138,7 +138,7 @@ class SkillsTable extends React.Component {
                   .map(skill => (
                     <TableRow key={skill.id}>
                       <TableCell>{skill.summary}</TableCell>
-                      <TableCell>{skill.level}</TableCell>
+                      <TableCell>{skill.level.name}</TableCell>
                       <TableCell>
                         {skill.claimed ? (
                           <CheckIcon />
@@ -158,7 +158,7 @@ class SkillsTable extends React.Component {
                           onClick={() =>
                             this.openEditSkillDialog(
                               skill.id,
-                              skill.level,
+                              skill.level.id,
                               skill.summary
                             )
                           }
@@ -205,7 +205,7 @@ class SkillsTable extends React.Component {
           onConfirm={this.editSkill}
           onClose={this.closeEditSkillDialog}
           open={this.state.editSkillDialogOpen}
-          level={this.state.editingSkill.level}
+          levelId={this.state.editingSkill.levelId}
           summary={this.state.editingSkill.summary}
         />
       </>

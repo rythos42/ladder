@@ -24,8 +24,8 @@ class Header extends React.Component {
     this.setState({ addSkillDialogOpen: false });
   };
 
-  addSkill = (level, summary) => {
-    this.props.addSkill({ level, summary });
+  addSkill = (levelId, summary) => {
+    this.props.addSkill({ levelId, summary });
     this.closeAddSkillDialog();
   };
 

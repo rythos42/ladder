@@ -7,11 +7,11 @@ namespace JUDI.Server.Ladder.Data
 	{
 		public LadderDbContext(DbContextOptions<LadderDbContext> options) : base(options)
 		{
-
 		}
 
 		public DbSet<Skill> Skills { get; set; }
 		public DbSet<Claim> Claims { get; set; }
 		public DbSet<Endorsement> Endorsements { get; set; }
+		public DbSet<Level> Levels { get; set; }
 	}
 }

@@ -33,7 +33,7 @@ namespace JUDI.API.Ladder.Controllers
 			if (addSkillDto == null)
 				throw new ArgumentNullException(nameof(addSkillDto));
 
-			skillRepository.Add(addSkillDto.Username, addSkillDto.Level, addSkillDto.Summary);
+			skillRepository.Add(addSkillDto.Username, addSkillDto.LevelId, addSkillDto.Summary);
 			return Ok();
 		}
 
@@ -44,7 +44,7 @@ namespace JUDI.API.Ladder.Controllers
 			if (patchSkillDto == null)
 				throw new ArgumentNullException(nameof(patchSkillDto));
 
-			skillRepository.Update(patchSkillDto.PatchedByUsername, patchSkillDto.SkillId, patchSkillDto.Level, patchSkillDto.Summary);
+			skillRepository.Update(patchSkillDto.PatchedByUsername, patchSkillDto.SkillId, patchSkillDto.LevelId, patchSkillDto.Summary);
 			return Ok();
 		}
 	}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using JUDI.API.Ladder.Contract;
 
 namespace JUDI.Server.Ladder.Data.Entities
 {

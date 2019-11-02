@@ -3,7 +3,7 @@
 	public class AddSkillDto
 	{
 		public string Username { get; set; }
-		public Level Level { get; set; }
+		public int LevelId { get; set; }
 		public string Summary { get; set; }
 	}
 }

@@ -28,6 +28,7 @@ namespace JUDI.API.Ladder
 			services.AddScoped<SkillRepository>();
 			services.AddScoped<ClaimRepository>();
 			services.AddScoped<EndorsementRepository>();
+			services.AddScoped<LevelRepository>();
 			services.AddScoped<EmailManager>();
 
 			var emailConfiguration = new EmailConfiguration();

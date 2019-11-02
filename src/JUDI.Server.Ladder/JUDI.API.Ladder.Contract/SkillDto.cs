@@ -4,7 +4,7 @@
 	{
 		public int Id { get; set; }
 		public string Summary { get; set; }
-		public Level Level { get; set; }
+		public int LevelId { get; set; }
 		public bool Claimed { get; set; }
 		public bool Endorsed { get; set; }
 	}

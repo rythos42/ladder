@@ -9,7 +9,8 @@ export default {
     claims: [],
     api: null,
     snackbarMessage: "",
-    userProfile: {}
+    userProfile: {},
+    levels: []
   },
   reducers: {
     setSkills(state, skills) {
@@ -73,6 +74,12 @@ export default {
         ...state,
         userProfile
       };
+    },
+    setLevels(state, levels) {
+      return {
+        ...state,
+        levels
+      };
     }
   },
   effects: dispatch => ({
@@ -82,6 +89,7 @@ export default {
         const config = await dispatch.application.getConfig();
         dispatch.application.setApi(new Api(config.serverUrl));
 
+        await dispatch.application.getLevels();
         await dispatch.application.getSkillsForUser(username);
         await dispatch.application.getClaimsForNotUser(username);
         await dispatch.application.getUserProfile(username);
@@ -97,6 +105,14 @@ export default {
 
     async getSkillsForUser(username, state) {
       const data = await state.application.api.getSkillsForUser(username);
+
+      data.forEach(skill => {
+        skill.level = state.application.levels.find(
+          level => level.id === skill.levelId
+        );
+        skill.summary = skill.summary || "";
+      });
+
       dispatch.application.setSkills(data);
     },
 
@@ -137,10 +153,10 @@ export default {
       dispatch.application.setSnackbarMessage("Endorsed skill.");
     },
 
-    async addSkill({ level, summary }, state) {
+    async addSkill({ levelId, summary }, state) {
       await state.application.api.addSkill(
         state.auth.account.userName,
-        level,
+        levelId,
         summary
       );
 
@@ -148,11 +164,11 @@ export default {
       dispatch.application.setSnackbarMessage("Added skill.");
     },
 
-    async editSkill({ skillId, level, summary }, state) {
+    async editSkill({ skillId, levelId, summary }, state) {
       await state.application.api.editSkill(
         state.auth.account.userName,
         skillId,
-        level,
+        levelId,
         summary
       );
       dispatch.application.getSkillsForUser(state.auth.account.userName);
@@ -161,6 +177,11 @@ export default {
     async getUserProfile(username, state) {
       const data = await state.application.api.getUserProfile(username);
       dispatch.application.setUserProfile(data);
+    },
+
+    async getLevels(_, state) {
+      const data = await state.application.api.getLevels();
+      dispatch.application.setLevels(data);
     }
   })
 };
