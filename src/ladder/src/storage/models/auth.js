@@ -94,11 +94,10 @@ export default {
     async initialize(_, state) {
       const msalApp = new UserAgentApplication({
         auth: {
-          clientId: "7a65bab1-4cf7-432d-b878-4f0c6ae52aea",
-          authority:
-            "https://login.microsoftonline.com/95d3bdcc-5ffa-4580-a8e2-241b051d339a",
+          clientId: state.config.clientId,
+          authority: state.config.authority,
           validateAuthority: true,
-          postLogoutRedirectUri: "http://localhost:3000",
+          postLogoutRedirectUri: state.config.postLogoutRedirectUri,
           navigateToLoginRequestUrl: false
         },
         cache: {

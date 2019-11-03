@@ -2,12 +2,18 @@ import { getConfig } from "../Api";
 
 export default {
   state: {
-    serverUrl: ""
+    serverUrl: "",
+    clientId: "",
+    authority: "",
+    postLogoutRedirectUri: ""
   },
   reducers: {
     setConfig(state, config) {
       return {
-        serverUrl: config.application.serverUrl
+        serverUrl: config.application.serverUrl,
+        clientId: config.auth.clientId,
+        authority: config.auth.authority,
+        postLogoutRedirectUri: config.auth.postLogoutRedirectUri
       };
     }
   },
