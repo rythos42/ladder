@@ -1,4 +1,4 @@
-import Api, { getConfig } from "../Api";
+import Api from "../Api";
 
 export default {
   state: {
@@ -86,8 +86,7 @@ export default {
     async initialize(account, state) {
       if (state.auth.account && state.auth.account.userName) {
         const username = state.auth.account.userName;
-        const config = await dispatch.application.getConfig();
-        dispatch.application.setApi(new Api(config.serverUrl));
+        dispatch.application.setApi(new Api(state.config.serverUrl));
 
         await dispatch.application.getLevels();
         await dispatch.application.getSkillsForUser(username);
@@ -95,12 +94,6 @@ export default {
         await dispatch.application.getUserProfile(username);
         dispatch.application.setHasData();
       }
-    },
-
-    async getConfig(_, state) {
-      const data = await getConfig();
-      dispatch.application.setConfig(data);
-      return data;
     },
 
     async getSkillsForUser(username, state) {

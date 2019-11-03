@@ -18,6 +18,7 @@ class Main extends React.Component {
   };
 
   async componentDidMount() {
+    await this.props.initializeConfig();
     await this.props.initializeAuth();
   }
 
@@ -106,6 +107,7 @@ function mapDispatch(dispatch) {
   return {
     initializeAuth: dispatch.auth.initialize,
     initializeData: dispatch.application.initialize,
+    initializeConfig: dispatch.config.initialize,
     toggleShowDebug: dispatch.auth.toggleShowDebug
   };
 }

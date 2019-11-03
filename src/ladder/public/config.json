@@ -1,3 +1,6 @@
 {
-  "serverUrl": "https://localhost:5001"
+  "application": {
+    "serverUrl": "https://localhost:5001"
+  },
+  "auth": {}
 }
