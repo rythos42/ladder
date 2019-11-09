@@ -5,6 +5,7 @@
   "auth": {
     "clientId": "7a65bab1-4cf7-432d-b878-4f0c6ae52aea",
     "authority": "https://login.microsoftonline.com/95d3bdcc-5ffa-4580-a8e2-241b051d339a",
-    "redirectUri": "http://localhost:3000"
+    "redirectUri": "http://localhost:3000",
+    "profilePhotoUrl": "https://account.activedirectory.windowsazure.com/UserProfileImage/UserProfileImage"
   }
 }

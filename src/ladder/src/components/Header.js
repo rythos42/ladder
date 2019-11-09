@@ -1,18 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import { Link, withRouter } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import { Link, withRouter } from "react-router-dom";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 import EditSkillDialog from "./EditSkillDialog";
 import EndorsementsIcon from "./endorsements.png";
 import SkillsIcon from "./skills.png";
 import styles from "./Header.module.css";
+import { IconButton } from "@material-ui/core";
 
 class Header extends React.Component {
   state = {
@@ -84,6 +86,9 @@ class Header extends React.Component {
                     />
                   </Badge>
                 </div>
+                <IconButton to="/profile" component={Link}>
+                  <AccountBoxIcon />
+                </IconButton>
                 <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
                 <Button onClick={this.props.requestSignOut}>Sign Out</Button>
               </>

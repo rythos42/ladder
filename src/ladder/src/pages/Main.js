@@ -5,6 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 import SkillsTable from "./SkillsTable";
 import ClaimsTable from "./ClaimsTable";
+import Profile from "./Profile";
 import Header from "./../components/Header";
 
 import styles from "./Main.module.css";
@@ -46,6 +47,9 @@ class Main extends React.Component {
             </Route>
             <Route path="/claims">
               <ClaimsTable />
+            </Route>
+            <Route path="/profile">
+              <Profile />
             </Route>
           </Switch>
         </section>
