@@ -90,7 +90,8 @@ export default {
           clientId: state.config.clientId,
           authority: state.config.authority,
           validateAuthority: true,
-          postLogoutRedirectUri: state.config.postLogoutRedirectUri,
+          redirectUri: state.config.redirectUri,
+          postLogoutRedirectUri: state.config.redirectUri,
           navigateToLoginRequestUrl: false
         },
         cache: {

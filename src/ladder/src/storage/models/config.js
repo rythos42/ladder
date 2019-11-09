@@ -5,7 +5,7 @@ export default {
     serverUrl: "",
     clientId: "",
     authority: "",
-    postLogoutRedirectUri: ""
+    redirectUri: ""
   },
   reducers: {
     setConfig(state, config) {
@@ -13,7 +13,7 @@ export default {
         serverUrl: config.application.serverUrl,
         clientId: config.auth.clientId,
         authority: config.auth.authority,
-        postLogoutRedirectUri: config.auth.postLogoutRedirectUri
+        redirectUri: config.auth.redirectUri
       };
     }
   },

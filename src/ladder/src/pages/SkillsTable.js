@@ -214,7 +214,7 @@ class SkillsTable extends React.Component {
                     ))
                 ) : (
                   <TableRow>
-                    <TableCell colspan={4} align="center">
+                    <TableCell colSpan={4} align="center">
                       Sign in to view skills!
                     </TableCell>
                   </TableRow>

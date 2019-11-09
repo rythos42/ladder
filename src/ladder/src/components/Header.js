@@ -1,10 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Badge from "@material-ui/core/Badge";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import { Link, withRouter } from "react-router-dom";
 
 import EditSkillDialog from "./EditSkillDialog";
 import EndorsementsIcon from "./endorsements.png";
@@ -13,8 +17,14 @@ import styles from "./Header.module.css";
 
 class Header extends React.Component {
   state = {
+    selectedTabIndex: 0,
     addSkillDialogOpen: false
   };
+
+  componentDidMount() {
+    const loadingTabIndex = this.props.location.pathname === "/skills" ? 0 : 1;
+    this.setState({ selectedTabIndex: loadingTabIndex });
+  }
 
   openAddSkillDialog = () => {
     this.setState({ addSkillDialogOpen: true });
@@ -29,21 +39,25 @@ class Header extends React.Component {
     this.closeAddSkillDialog();
   };
 
+  handleTabChange = (evt, newValue) => {
+    this.setState({ selectedTabIndex: newValue });
+  };
+
   render() {
     return (
       <AppBar position="static" color="default">
         <Toolbar>
           <Grid container>
             <Grid item xs={6}>
-              {this.props.showClaims ? (
-                <Button onClick={this.props.requestShowSkills}>
-                  Show Skills
-                </Button>
-              ) : (
-                <Button onClick={this.props.requestShowClaims}>
-                  Show Claims
-                </Button>
-              )}
+              <Tabs
+                indicatorColor="primary"
+                textColor="primary"
+                value={this.state.selectedTabIndex}
+                onChange={this.handleTabChange}
+              >
+                <Tab label="Skills" to="/skills" component={Link} />
+                <Tab label="Claims" to="/claims" component={Link} />
+              </Tabs>
             </Grid>
             <Grid container item xs={6} justify="flex-end">
               {this.props.hasAccount ? (
@@ -94,13 +108,11 @@ class Header extends React.Component {
 
 function mapState({
   application: {
-    showClaims,
     userProfile: { claimCount, endorsementCount }
   },
   auth: { account }
 }) {
   return {
-    showClaims,
     hasAccount: account !== null,
     claimCount: claimCount || 0,
     endorsementCount: endorsementCount || 0
@@ -111,13 +123,15 @@ function mapDispatch({ application, auth }) {
   return {
     requestSignIn: auth.requestSignIn,
     requestSignOut: auth.requestSignOut,
-    requestShowClaims: application.showClaims,
     requestShowSkills: application.showSkills,
     addSkill: application.addSkill
   };
 }
 
-export default connect(
-  mapState,
-  mapDispatch
+export default compose(
+  withRouter,
+  connect(
+    mapState,
+    mapDispatch
+  )
 )(Header);

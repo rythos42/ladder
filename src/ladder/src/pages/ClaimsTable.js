@@ -107,7 +107,7 @@ class ClaimsTable extends React.Component {
               )
             ) : (
               <TableRow>
-                <TableCell colspan={3} align="center">
+                <TableCell colSpan={3} align="center">
                   Sign in to view claims!
                 </TableCell>
               </TableRow>

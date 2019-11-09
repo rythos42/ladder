@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 
 import SkillsTable from "./SkillsTable";
@@ -33,10 +34,20 @@ class Main extends React.Component {
 
   render() {
     return (
-      <>
+      <Router>
         <Header />
         <section className={styles.main}>
-          {this.props.showClaims ? <ClaimsTable /> : <SkillsTable />}
+          <Switch>
+            <Route exact path="/">
+              <SkillsTable />
+            </Route>
+            <Route path="/skills">
+              <SkillsTable />
+            </Route>
+            <Route path="/claims">
+              <ClaimsTable />
+            </Route>
+          </Switch>
         </section>
         <section>
           <Snackbar
@@ -49,13 +60,13 @@ class Main extends React.Component {
             message={<span id="message-id">{this.props.snackbarMessage}</span>}
           />
         </section>
-      </>
+      </Router>
     );
   }
 }
 
 function mapState({
-  application: { hasData, showClaims, snackbarMessage },
+  application: { hasData, snackbarMessage },
   auth: { account, graphProfile, error }
 }) {
   return {
@@ -63,7 +74,6 @@ function mapState({
     graphProfile,
     error,
     hasData,
-    showClaims,
     snackbarMessage
   };
 }

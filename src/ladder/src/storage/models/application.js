@@ -4,7 +4,6 @@ export default {
   state: {
     config: {},
     hasData: false,
-    showClaims: false,
     skills: [],
     claims: [],
     api: null,
@@ -31,12 +30,6 @@ export default {
       return {
         ...state,
         hasData: true
-      };
-    },
-    setShowClaims(state, showClaims) {
-      return {
-        ...state,
-        showClaims
       };
     },
     setClaims(state, claims) {
@@ -134,14 +127,6 @@ export default {
       );
       dispatch.application.setSkillAsClaimed(claimingSkillId);
       dispatch.application.setSnackbarMessage("Claimed skill.");
-    },
-
-    showClaims() {
-      dispatch.application.setShowClaims(true);
-    },
-
-    showSkills() {
-      dispatch.application.setShowClaims(false);
     },
 
     async endorse({ claimId, message }, state) {
