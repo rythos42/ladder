@@ -4,7 +4,6 @@ import { compose } from "redux";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Badge from "@material-ui/core/Badge";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
@@ -46,61 +45,59 @@ class Header extends React.Component {
   render() {
     return (
       <AppBar position="static" color="default">
-        <Toolbar>
-          <Grid container>
-            <Grid item xs={6}>
-              <Tabs
-                indicatorColor="primary"
-                textColor="primary"
-                value={this.state.selectedTabIndex}
-                onChange={this.handleTabChange}
-              >
-                <Tab label="Skills" to="/skills" component={Link} />
-                <Tab label="Claims" to="/claims" component={Link} />
-              </Tabs>
-            </Grid>
-            <Grid container item xs={6} justify="flex-end">
-              {this.props.hasAccount ? (
-                <>
-                  <div className={styles.iconPanel}>
-                    <Badge
-                      showZero={true}
-                      badgeContent={this.props.claimCount}
-                      color="primary"
-                    >
-                      <img
-                        src={EndorsementsIcon}
-                        alt="Count of endorsements you've given to other people."
-                        title="Count of endorsements you've given to other people."
-                      />
-                    </Badge>
-                    <Badge
-                      showZero={true}
-                      badgeContent={this.props.endorsementCount}
-                      color="primary"
-                    >
-                      <img
-                        src={SkillsIcon}
-                        alt="Count of your claimed skills."
-                        title="Count of your claimed skills."
-                      />
-                    </Badge>
-                  </div>
-                  <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
-                  <Button onClick={this.props.requestSignOut}>Sign Out</Button>
-                </>
-              ) : (
-                <Button onClick={this.props.requestSignIn}>Sign In</Button>
-              )}
-            </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Tabs
+              indicatorColor="primary"
+              textColor="primary"
+              value={this.state.selectedTabIndex}
+              onChange={this.handleTabChange}
+            >
+              <Tab label="Skills" to="/skills" component={Link} />
+              <Tab label="Claims" to="/claims" component={Link} />
+            </Tabs>
           </Grid>
-          <EditSkillDialog
-            confirmButtonLabel="Add Skill"
-            onConfirm={this.addSkill}
-            onClose={this.closeAddSkillDialog}
-            open={this.state.addSkillDialogOpen}
-          />
-        </Toolbar>
+          <Grid container item xs={6} justify="flex-end">
+            {this.props.hasAccount ? (
+              <>
+                <div className={styles.iconPanel}>
+                  <Badge
+                    showZero={true}
+                    badgeContent={this.props.claimCount}
+                    color="primary"
+                  >
+                    <img
+                      src={EndorsementsIcon}
+                      alt="Count of endorsements you've given to other people."
+                      title="Count of endorsements you've given to other people."
+                    />
+                  </Badge>
+                  <Badge
+                    showZero={true}
+                    badgeContent={this.props.endorsementCount}
+                    color="primary"
+                  >
+                    <img
+                      src={SkillsIcon}
+                      alt="Count of your claimed skills."
+                      title="Count of your claimed skills."
+                    />
+                  </Badge>
+                </div>
+                <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
+                <Button onClick={this.props.requestSignOut}>Sign Out</Button>
+              </>
+            ) : (
+              <Button onClick={this.props.requestSignIn}>Sign In</Button>
+            )}
+          </Grid>
+        </Grid>
+        <EditSkillDialog
+          confirmButtonLabel="Add Skill"
+          onConfirm={this.addSkill}
+          onClose={this.closeAddSkillDialog}
+          open={this.state.addSkillDialogOpen}
+        />
       </AppBar>
     );
   }

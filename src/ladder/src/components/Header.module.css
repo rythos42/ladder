@@ -1,8 +1,17 @@
+.iconPanel {
+  margin: 8px;
+}
+
 .iconPanel img {
-  height: 43px; /* Largest size that fits in toolbar with 8px top/bottom margin without increasing the overall toolbar size */
+  height: 32px; /* Largest size that fits in appbar with 8px top/bottom margin without increasing the overall toolbar size */
 }
 
 .iconPanel > span {
-  /* badges are in span */
+  /* images are in span */
   margin-right: 8px;
+}
+
+.iconPanel > span > span {
+  /* MUI badges rise out of the top of the screen by default, this brings them down enough to fit */
+  top: 2px;
 }
