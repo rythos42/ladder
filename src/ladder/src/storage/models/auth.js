@@ -22,8 +22,7 @@ export default {
     msalApp: null,
     error: "",
     account: null,
-    graphProfile: {},
-    showDebug: false
+    graphProfile: {}
   },
   reducers: {
     setMsalApp(state, msalApp) {
@@ -48,12 +47,6 @@ export default {
       return {
         ...state,
         graphProfile
-      };
-    },
-    setShowDebug(state, showDebug) {
-      return {
-        ...state,
-        showDebug
       };
     }
   },
@@ -130,11 +123,6 @@ export default {
 
     async requestSignOut(_, state) {
       state.auth.msalApp.logout();
-    },
-
-    toggleShowDebug(_, state) {
-      const toggle = !state.auth.showDebug;
-      dispatch.auth.setShowDebug(toggle);
     }
   })
 };
