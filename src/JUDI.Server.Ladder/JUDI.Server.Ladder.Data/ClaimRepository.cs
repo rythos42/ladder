@@ -25,6 +25,7 @@ namespace JUDI.Server.Ladder.Data
 				   {
 					   Id = claim.Id,
 					   FromUsername = claim.ClaimingUsername,
+					   LevelId = skill.Level.Id,
 					   SkillSummary = skill.Summary,
 					   ClaimEvidence = claim.ClaimEvidence,
 					   Messages = claim.Messages.Select(claimMessage => new ClaimMessageDto

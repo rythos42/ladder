@@ -112,6 +112,13 @@ export default {
 
     async getClaimsForNotUser(username, state) {
       const data = await state.application.api.getClaimsForNotUser(username);
+
+      data.forEach(claim => {
+        claim.level = state.application.levels.find(
+          level => level.id === claim.levelId
+        );
+      });
+
       dispatch.application.setClaims(data);
     },
 

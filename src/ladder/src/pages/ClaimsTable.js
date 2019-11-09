@@ -60,6 +60,7 @@ class ClaimsTable extends React.Component {
 
   tableHeaders = [
     { label: "User", id: "user" },
+    { label: "Level", id: "level" },
     { label: "Summary", id: "summary" },
     { label: "", id: "endorse" }
   ];
@@ -93,6 +94,7 @@ class ClaimsTable extends React.Component {
                     <React.Fragment key={claim.id}>
                       <TableRow>
                         <TableCell>{claim.fromUsername}</TableCell>
+                        <TableCell>{claim.level.name}</TableCell>
                         <TableCell>{claim.skillSummary}</TableCell>
                         <TableCell>
                           <Button
