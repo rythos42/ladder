@@ -29,5 +29,10 @@ namespace JUDI.Server.Ladder.Data
 		{
 			return dbContext.Endorsements.Count(endorsement => endorsement.EndorserUsername == username);
 		}
+
+		public int GetEndorsedClaimsCountForUser(string username)
+		{
+			return dbContext.Endorsements.Count(endorsement => endorsement.EndorsedClaim.ClaimingUsername == username);
+		}
 	}
 }

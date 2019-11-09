@@ -49,11 +49,6 @@ namespace JUDI.Server.Ladder.Data
 			dbContext.SaveChanges();
 		}
 
-		public int GetClaimCountForUser(string username)
-		{
-			return dbContext.Claims.Count(claim => claim.ClaimingUsername == username);
-		}
-
 		public Message AddMessage(int claimId, string authorUsername, string messageText)
 		{
 			Claim claim = dbContext.Claims.Find(claimId);

@@ -8,12 +8,10 @@ namespace JUDI.API.Ladder.Controllers
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-		private readonly ClaimRepository claimRepository;
 		private readonly EndorsementRepository endorsementRepository;
 
-		public UserController(ClaimRepository claimRepository, EndorsementRepository endorsementRepository)
+		public UserController(EndorsementRepository endorsementRepository)
 		{
-			this.claimRepository = claimRepository;
 			this.endorsementRepository = endorsementRepository;
 		}
 
@@ -23,7 +21,7 @@ namespace JUDI.API.Ladder.Controllers
 		{
 			return Ok(new OkResponse<UserProfileDto>(new UserProfileDto
 			{
-				ClaimCount = claimRepository.GetClaimCountForUser(username),
+				ClaimCount = endorsementRepository.GetEndorsedClaimsCountForUser(username),
 				EndorsementCount = endorsementRepository.GetEndorsementCountForUser(username)
 			}));
 		}
