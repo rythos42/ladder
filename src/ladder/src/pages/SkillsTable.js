@@ -124,33 +124,35 @@ class SkillsTable extends React.Component {
     return (
       <>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Card className={styles.filter}>
-              <Typography>Filter</Typography>
-              <TextField
-                margin="normal"
-                onChange={this.setSummaryFilter}
-                label="Summary"
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
-              <FormControl margin="normal">
-                <InputLabel>Level</InputLabel>
-                <Select
-                  onChange={this.setLevelFilter}
-                  value={this.state.filter.levelId}
-                >
-                  <MenuItem value={-1}>None</MenuItem>
-                  {this.props.levels.map(level => (
-                    <MenuItem key={level.id} value={level.id}>
-                      {level.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Card>
-          </Grid>
+          {this.props.hasAccount && (
+            <Grid item xs={12}>
+              <Card className={styles.filter}>
+                <Typography>Filter</Typography>
+                <TextField
+                  margin="normal"
+                  onChange={this.setSummaryFilter}
+                  label="Summary"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                />
+                <FormControl margin="normal">
+                  <InputLabel>Level</InputLabel>
+                  <Select
+                    onChange={this.setLevelFilter}
+                    value={this.state.filter.levelId}
+                  >
+                    <MenuItem value={-1}>None</MenuItem>
+                    {this.props.levels.map(level => (
+                      <MenuItem key={level.id} value={level.id}>
+                        {level.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Card>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Table>
               <SortableTableHead
@@ -160,53 +162,63 @@ class SkillsTable extends React.Component {
                 onRequestSort={this.handleRequestSort}
               />
               <TableBody>
-                {tableHelper
-                  .stableSort(
-                    this.props.skills,
-                    this.state.order,
-                    this.state.orderBy
-                  )
-                  .filter(
-                    skill =>
-                      skill.summary
-                        .toLowerCase()
-                        .indexOf(this.state.filter.summary) !== -1 &&
-                      (this.state.filter.levelId === -1 ||
-                        skill.level.id === this.state.filter.levelId)
-                  )
-                  .map(skill => (
-                    <TableRow key={skill.id}>
-                      <TableCell>{skill.summary}</TableCell>
-                      <TableCell>{skill.level.name}</TableCell>
-                      <TableCell>
-                        {skill.claimed ? (
-                          <CheckIcon />
-                        ) : (
+                {this.props.hasAccount ? (
+                  tableHelper
+                    .stableSort(
+                      this.props.skills,
+                      this.state.order,
+                      this.state.orderBy
+                    )
+                    .filter(
+                      skill =>
+                        skill.summary
+                          .toLowerCase()
+                          .indexOf(this.state.filter.summary) !== -1 &&
+                        (this.state.filter.levelId === -1 ||
+                          skill.level.id === this.state.filter.levelId)
+                    )
+                    .map(skill => (
+                      <TableRow key={skill.id}>
+                        <TableCell>{skill.summary}</TableCell>
+                        <TableCell>{skill.level.name}</TableCell>
+                        <TableCell>
+                          {skill.claimed ? (
+                            <CheckIcon />
+                          ) : (
+                            <Button
+                              onClick={() =>
+                                this.openClaimSkillDialog(skill.id)
+                              }
+                            >
+                              Claim
+                            </Button>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {skill.endorsed ? <CheckIcon /> : <CloseIcon />}
+                        </TableCell>
+                        <TableCell>
                           <Button
-                            onClick={() => this.openClaimSkillDialog(skill.id)}
+                            onClick={() =>
+                              this.openEditSkillDialog(
+                                skill.id,
+                                skill.level.id,
+                                skill.summary
+                              )
+                            }
                           >
-                            Claim
+                            Edit
                           </Button>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {skill.endorsed ? <CheckIcon /> : <CloseIcon />}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={() =>
-                            this.openEditSkillDialog(
-                              skill.id,
-                              skill.level.id,
-                              skill.summary
-                            )
-                          }
-                        >
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell colspan={4} align="center">
+                      Sign in to view skills!
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </Grid>
@@ -252,8 +264,8 @@ class SkillsTable extends React.Component {
   }
 }
 
-function mapState({ application: { skills, levels } }) {
-  return { skills, levels };
+function mapState({ application: { skills, levels }, auth: { account } }) {
+  return { skills, levels, hasAccount: account !== null };
 }
 
 function mapDispatch({ application }) {

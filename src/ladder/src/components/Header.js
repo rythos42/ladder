@@ -46,37 +46,37 @@ class Header extends React.Component {
               )}
             </Grid>
             <Grid container item xs={6} justify="flex-end">
-              <div className={styles.iconPanel}>
-                <Badge
-                  showZero={true}
-                  badgeContent={this.props.claimCount}
-                  color="primary"
-                >
-                  <img
-                    src={EndorsementsIcon}
-                    alt="Count of endorsements you've given to other people."
-                    title="Count of endorsements you've given to other people."
-                  />
-                </Badge>
-                <Badge
-                  showZero={true}
-                  badgeContent={this.props.endorsementCount}
-                  color="primary"
-                >
-                  <img
-                    src={SkillsIcon}
-                    alt="Count of your claimed skills."
-                    title="Count of your claimed skills."
-                  />
-                </Badge>
-              </div>
-              {this.props.hasAccount && (
-                <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
-              )}
-              {!this.props.account ? (
-                <Button onClick={this.props.requestSignIn}>Sign In</Button>
+              {this.props.hasAccount ? (
+                <>
+                  <div className={styles.iconPanel}>
+                    <Badge
+                      showZero={true}
+                      badgeContent={this.props.claimCount}
+                      color="primary"
+                    >
+                      <img
+                        src={EndorsementsIcon}
+                        alt="Count of endorsements you've given to other people."
+                        title="Count of endorsements you've given to other people."
+                      />
+                    </Badge>
+                    <Badge
+                      showZero={true}
+                      badgeContent={this.props.endorsementCount}
+                      color="primary"
+                    >
+                      <img
+                        src={SkillsIcon}
+                        alt="Count of your claimed skills."
+                        title="Count of your claimed skills."
+                      />
+                    </Badge>
+                  </div>
+                  <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
+                  <Button onClick={this.props.requestSignOut}>Sign Out</Button>
+                </>
               ) : (
-                <Button onClick={this.props.requestSignOut}>Sign Out</Button>
+                <Button onClick={this.props.requestSignIn}>Sign In</Button>
               )}
             </Grid>
           </Grid>

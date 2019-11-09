@@ -75,32 +75,43 @@ class ClaimsTable extends React.Component {
             onRequestSort={this.handleRequestSort}
           />
           <TableBody>
-            {this.props.claims.length === 0 && (
+            {this.props.hasAccount ? (
+              this.props.claims.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={3} align="center">
+                    No claims that need endorsement.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                tableHelper
+                  .stableSort(
+                    this.props.claims,
+                    this.state.order,
+                    this.state.orderBy
+                  )
+                  .map(claim => (
+                    <React.Fragment key={claim.id}>
+                      <TableRow>
+                        <TableCell>{claim.fromUsername}</TableCell>
+                        <TableCell>{claim.skillSummary}</TableCell>
+                        <TableCell>
+                          <Button
+                            onClick={() => this.openEndorsementDialog(claim)}
+                          >
+                            Endorse
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))
+              )
+            ) : (
               <TableRow>
-                <TableCell colSpan={3}>
-                  No claims that need endorsement.
+                <TableCell colspan={3} align="center">
+                  Sign in to view claims!
                 </TableCell>
               </TableRow>
             )}
-            {tableHelper
-              .stableSort(
-                this.props.claims,
-                this.state.order,
-                this.state.orderBy
-              )
-              .map(claim => (
-                <React.Fragment key={claim.id}>
-                  <TableRow>
-                    <TableCell>{claim.fromUsername}</TableCell>
-                    <TableCell>{claim.skillSummary}</TableCell>
-                    <TableCell>
-                      <Button onClick={() => this.openEndorsementDialog(claim)}>
-                        Endorse
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </React.Fragment>
-              ))}
           </TableBody>
         </Table>
         <EndorsementDialog
@@ -115,8 +126,8 @@ class ClaimsTable extends React.Component {
   }
 }
 
-function mapState({ application: { claims } }) {
-  return { claims };
+function mapState({ application: { claims }, auth: { account } }) {
+  return { claims, hasAccount: account !== null };
 }
 
 function mapDispatch({ application }) {
