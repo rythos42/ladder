@@ -15,7 +15,9 @@ class Api {
     addSkill: () => `${this.serverUrl}/api/skills`,
     editSkill: () => `${this.serverUrl}/api/skills`,
     getUserProfile: username => `${this.serverUrl}/api/user/${username}`,
-    getLevels: () => `${this.serverUrl}/api/levels`
+    getLevels: () => `${this.serverUrl}/api/levels`,
+    addMessage: claimId => `${this.serverUrl}/api/claims/${claimId}/message`,
+    getMessages: claimId => `${this.serverUrl}/api/claims/${claimId}/message`
   };
 
   constructor(serverUrl) {
@@ -48,11 +50,11 @@ class Api {
     return json.data;
   };
 
-  endorse = async (endorserUsername, claimId, endorsementEvidence) => {
+  endorse = async (endorserUsername, claimId, message) => {
     await fetch(this.endpoints.endorse(claimId), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ endorserUsername, endorsementEvidence })
+      body: JSON.stringify({ endorserUsername, message })
     });
   };
 
@@ -85,6 +87,20 @@ class Api {
 
   getLevels = async () => {
     const response = await fetch(this.endpoints.getLevels());
+    const json = await response.json();
+    return json.data;
+  };
+
+  addMessage = async (username, claimId, message) => {
+    await fetch(this.endpoints.addMessage(claimId), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ authorUsername: username, message })
+    });
+  };
+
+  getMessages = async claimId => {
+    const response = await fetch(this.endpoints.getMessages(claimId));
     const json = await response.json();
     return json.data;
   };

@@ -9,4 +9,8 @@
     <PackageReference Include="Sendgrid" Version="9.12.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JUDI.Server.Ladder.Data\JUDI.Server.Ladder.Data.csproj" />
+  </ItemGroup>
+
 </Project>

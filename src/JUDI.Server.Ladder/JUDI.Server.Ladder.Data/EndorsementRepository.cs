@@ -13,14 +13,14 @@ namespace JUDI.Server.Ladder.Data
 			this.dbContext = dbContext;
 		}
 
-		public void AddEndorsement(int claimId, string endorserUsername, string endorsementEvidence)
+		public void AddEndorsement(int claimId, string endorserUsername, Message message)
 		{
 			dbContext.Endorsements.Add(new Endorsement
 			{
 				EndorsedClaim = dbContext.Claims.Single(claim => claim.Id == claimId),
-				EndorsementEvidence = endorsementEvidence,
 				EndorserUsername = endorserUsername,
-				EndorsementDate = DateTime.Now
+				EndorsementDate = DateTime.Now,
+				Message = message
 			});
 			dbContext.SaveChanges();
 		}

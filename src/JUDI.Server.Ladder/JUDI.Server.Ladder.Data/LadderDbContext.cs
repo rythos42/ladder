@@ -13,5 +13,7 @@ namespace JUDI.Server.Ladder.Data
 		public DbSet<Claim> Claims { get; set; }
 		public DbSet<Endorsement> Endorsements { get; set; }
 		public DbSet<Level> Levels { get; set; }
+		public DbSet<Message> Messages { get; set; }
+		public DbSet<ClaimMessage> ClaimMessages { get; set; }
 	}
 }

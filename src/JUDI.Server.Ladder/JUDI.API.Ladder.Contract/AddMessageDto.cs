@@ -1,8 +1,8 @@
 ﻿namespace JUDI.API.Ladder.Contract
 {
-	public class EndorseClaimDto
+	public class AddMessageDto
 	{
-		public string EndorserUsername { get; set; }
+		public string AuthorUsername { get; set; }
 		public string Message { get; set; }
 	}
 }

@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JUDI.Server.Ladder.Data.Entities
 {
-	public class Endorsement
+	public class Message
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public string EndorserUsername { get; set; }
-		public Claim EndorsedClaim { get; set; }
-		public DateTime EndorsementDate { get; set; }
-		public Message Message { get; set; }
+		public string Text { get; set; }
+		public string AuthorUsername { get; set; }
+		public DateTime WrittenOnDate { get; set; }
 	}
 }

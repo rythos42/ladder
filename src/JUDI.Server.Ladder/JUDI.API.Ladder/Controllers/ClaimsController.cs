@@ -14,13 +14,13 @@ namespace JUDI.API.Ladder.Controllers
 	public class ClaimsController : ControllerBase
 	{
 		private readonly ClaimRepository claimRepository;
-		private readonly EndorsementRepository endorsementRepository;
+		private readonly EndorsementManager endorsementManager;
 		private readonly EmailManager emailManager;
 
-		public ClaimsController(ClaimRepository claimRepository, EndorsementRepository endorsementRepository, EmailManager emailManager)
+		public ClaimsController(ClaimRepository claimRepository, EndorsementManager endorsementManager, EmailManager emailManager)
 		{
 			this.claimRepository = claimRepository;
-			this.endorsementRepository = endorsementRepository;
+			this.endorsementManager = endorsementManager;
 			this.emailManager = emailManager;
 		}
 
@@ -53,8 +53,27 @@ namespace JUDI.API.Ladder.Controllers
 			if (endorseClaimDto == null)
 				throw new ArgumentNullException(nameof(endorseClaimDto));
 
-			endorsementRepository.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.EndorsementEvidence);
+			endorsementManager.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.Message);
 			return Ok();
+		}
+
+		[HttpPost]
+		[Route("{claimId}/message")]
+		public ActionResult AddMessage(int claimId, AddMessageDto addMessageDto)
+		{
+			if (addMessageDto == null)
+				throw new ArgumentNullException(nameof(addMessageDto));
+
+			claimRepository.AddMessage(claimId, addMessageDto.AuthorUsername, addMessageDto.Message);
+			return Ok();
+		}
+
+		[HttpGet]
+		[Route("{claimId}/message")]
+		public ActionResult<OkResponse<IEnumerable<ClaimMessageDto>>> GetMessages(int claimId)
+		{
+			var messages = claimRepository.GetMessages(claimId);
+			return new OkResponse<IEnumerable<ClaimMessageDto>>(messages);
 		}
 	}
 }

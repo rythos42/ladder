@@ -45,6 +45,14 @@ export default {
         claims
       };
     },
+    setMessages(state, { claimId, messages }) {
+      return {
+        ...state,
+        claims: state.claims.map(claim =>
+          claim.id !== claimId ? claim : { ...claim, messages }
+        )
+      };
+    },
     setClaimAsEndorsed(state, claimId) {
       return {
         ...state,
@@ -136,11 +144,11 @@ export default {
       dispatch.application.setShowClaims(false);
     },
 
-    async endorse({ claimId, endorsementEvidence }, state) {
+    async endorse({ claimId, message }, state) {
       await state.application.api.endorse(
         state.auth.account.userName,
         claimId,
-        endorsementEvidence
+        message
       );
       dispatch.application.setClaimAsEndorsed(claimId);
       dispatch.application.setSnackbarMessage("Endorsed skill.");
@@ -175,6 +183,19 @@ export default {
     async getLevels(_, state) {
       const data = await state.application.api.getLevels();
       dispatch.application.setLevels(data);
+    },
+
+    async addMessage({ claimId, message }, state) {
+      await state.application.api.addMessage(
+        state.auth.account.userName,
+        claimId,
+        message
+      );
+    },
+
+    async getMessages(claimId, state) {
+      const data = await state.application.api.getMessages(claimId);
+      dispatch.application.setMessages({ claimId, messages: data });
     }
   })
 };

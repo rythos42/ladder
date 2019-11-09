@@ -26,7 +26,13 @@ namespace JUDI.Server.Ladder.Data
 					   Id = claim.Id,
 					   FromUsername = claim.ClaimingUsername,
 					   SkillSummary = skill.Summary,
-					   ClaimEvidence = claim.ClaimEvidence
+					   ClaimEvidence = claim.ClaimEvidence,
+					   Messages = claim.Messages.Select(claimMessage => new ClaimMessageDto
+					   {
+						   AuthorUsername = claimMessage.Message.AuthorUsername,
+						   Text = claimMessage.Message.Text,
+						   WrittenOnDate = claimMessage.Message.WrittenOnDate
+					   })
 				   };
 		}
 
@@ -46,6 +52,29 @@ namespace JUDI.Server.Ladder.Data
 		public int GetClaimCountForUser(string username)
 		{
 			return dbContext.Claims.Count(claim => claim.ClaimingUsername == username);
+		}
+
+		public Message AddMessage(int claimId, string authorUsername, string messageText)
+		{
+			Claim claim = dbContext.Claims.Find(claimId);
+			var message = new Message { AuthorUsername = authorUsername, Text = messageText, WrittenOnDate = DateTime.Now };
+			claim.Messages.Add(new ClaimMessage { Message = message });
+			dbContext.SaveChanges();
+			return message;
+		}
+
+		public IEnumerable<ClaimMessageDto> GetMessages(int claimId)
+		{
+			return dbContext
+				.Claims
+				.Where(claim => claim.Id == claimId)
+				.SelectMany(claim => claim.Messages)
+				.Select(claimMessage => new ClaimMessageDto
+				{
+					AuthorUsername = claimMessage.Message.AuthorUsername,
+					Text = claimMessage.Message.Text,
+					WrittenOnDate = claimMessage.Message.WrittenOnDate
+				});
 		}
 	}
 }

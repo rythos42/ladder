@@ -5,47 +5,50 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import TextField from "@material-ui/core/TextField";
-import Collapse from "@material-ui/core/Collapse";
-import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import * as tableHelper from "./../TableHelper";
 import SortableTableHead from "./../components/SortableTableHead";
-import styles from "./ClaimsTable.module.css";
+import EndorsementDialog from "../components/EndorsementDialog";
 
 class ClaimsTable extends React.Component {
   state = {
     endorsementDialogOpen: false,
-    selectedClaimId: -1,
-    endorsementEvidence: "",
+    selectedClaim: { messages: [] },
     order: "asc",
-    orderBy: "Summary",
-    expandedRow: null
+    orderBy: "Summary"
   };
 
-  openEndorsementDialog = claimId => {
-    this.setState({ endorsementDialogOpen: true, selectedClaimId: claimId });
+  componentDidUpdate(prevProps) {
+    if (prevProps.claims === this.props.claims) return;
+
+    const selectedClaim = this.props.claims.find(
+      claim => claim.id === this.state.selectedClaim.id
+    );
+    if (selectedClaim) this.setState({ selectedClaim });
+  }
+
+  openEndorsementDialog = claim => {
+    this.setState({ endorsementDialogOpen: true, selectedClaim: claim });
   };
 
   closeEndorsementDialog = () => {
     this.setState({ endorsementDialogOpen: false });
   };
 
-  setEndorsementEvidence = evt => {
-    this.setState({ endorsementEvidence: evt.target.value });
-  };
-
-  endorse = () => {
+  endorse = message => {
     this.props.endorse({
-      claimId: this.state.selectedClaimId,
-      endorsementEvidence: this.state.endorsementEvidence
+      claimId: this.state.selectedClaim.id,
+      message: message
     });
     this.closeEndorsementDialog();
+  };
+
+  addMessage = async message => {
+    await this.props.addMessage({
+      claimId: this.state.selectedClaim.id,
+      message: message
+    });
+    this.props.getMessages(this.state.selectedClaim.id);
   };
 
   handleRequestSort = property => {
@@ -55,14 +58,7 @@ class ClaimsTable extends React.Component {
     this.setState({ orderBy: property });
   };
 
-  handleRowClick = claimId => {
-    if (this.state.expandedRow === claimId)
-      this.setState({ expandedRow: null });
-    else this.setState({ expandedRow: claimId });
-  };
-
   tableHeaders = [
-    { label: "", id: "expand", className: styles.expandColumn },
     { label: "User", id: "user" },
     { label: "Summary", id: "summary" },
     { label: "", id: "endorse" }
@@ -94,73 +90,26 @@ class ClaimsTable extends React.Component {
               )
               .map(claim => (
                 <React.Fragment key={claim.id}>
-                  <TableRow
-                    onClick={() => this.handleRowClick(claim.id)}
-                    hover
-                    className={
-                      styles.tableRow +
-                      " " +
-                      (this.state.expandedRow === claim.id
-                        ? styles.expandedRow
-                        : "")
-                    }
-                  >
-                    <TableCell className={styles.expandColumn}>
-                      {this.state.expandedRow === claim.id ? (
-                        <ExpandLessIcon />
-                      ) : (
-                        <ExpandMoreIcon />
-                      )}
-                    </TableCell>
+                  <TableRow>
                     <TableCell>{claim.fromUsername}</TableCell>
                     <TableCell>{claim.skillSummary}</TableCell>
                     <TableCell>
-                      <Button
-                        onClick={() => this.openEndorsementDialog(claim.id)}
-                      >
+                      <Button onClick={() => this.openEndorsementDialog(claim)}>
                         Endorse
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className={styles.expandableRow}></TableCell>
-                    <TableCell colSpan={3} className={styles.expandableRow}>
-                      <Collapse
-                        in={this.state.expandedRow === claim.id}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        {claim.claimEvidence}
-                      </Collapse>
                     </TableCell>
                   </TableRow>
                 </React.Fragment>
               ))}
           </TableBody>
         </Table>
-        <Dialog
-          onClose={this.closeEndorsementDialog}
+        <EndorsementDialog
           open={this.state.endorsementDialogOpen}
-          maxWidth="md"
-          fullWidth
-        >
-          <DialogTitle>Claim Skill</DialogTitle>
-          <DialogContent>
-            <TextField
-              multiline
-              rows={6}
-              onChange={this.setEndorsementEvidence}
-              label="Evidence"
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.closeEndorsementDialog}>Cancel</Button>
-            <Button onClick={this.endorse} variant="contained">
-              Endorse
-            </Button>
-          </DialogActions>
-        </Dialog>
+          onClose={this.closeEndorsementDialog}
+          onEndorse={this.endorse}
+          onAddMessage={this.addMessage}
+          claim={this.state.selectedClaim}
+        />
       </>
     );
   }
@@ -171,7 +120,11 @@ function mapState({ application: { claims } }) {
 }
 
 function mapDispatch({ application }) {
-  return { endorse: application.endorse };
+  return {
+    endorse: application.endorse,
+    addMessage: application.addMessage,
+    getMessages: application.getMessages
+  };
 }
 
 export default connect(
