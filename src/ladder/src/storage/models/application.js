@@ -91,7 +91,7 @@ export default {
 
         await dispatch.application.getLevels();
         await dispatch.application.getSkillsForUser(username);
-        await dispatch.application.getClaimsForNotUser(username);
+        await dispatch.application.getClaims();
         await dispatch.application.getUserProfile(username);
         dispatch.application.setHasData();
       }
@@ -110,8 +110,8 @@ export default {
       dispatch.application.setSkills(data);
     },
 
-    async getClaimsForNotUser(username, state) {
-      const data = await state.application.api.getClaimsForNotUser(username);
+    async getClaims(_, state) {
+      const data = await state.application.api.getClaims();
 
       data.forEach(claim => {
         claim.level = state.application.levels.find(

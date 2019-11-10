@@ -14,9 +14,9 @@ namespace JUDI.Server.Ladder.Business
 			this.claimRepository = claimRepository;
 		}
 
-		public IEnumerable<ClaimDto> GetClaimsForNotUser(string username)
+		public IEnumerable<ClaimDto> GetAllClaims()
 		{
-			return claimRepository.GetClaims(claim => claim.ClaimingUsername != username);
+			return claimRepository.GetClaims(claim => true);
 		}
 
 		public IEnumerable<ClaimDto> GetClaims(string username)

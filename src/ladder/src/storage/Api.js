@@ -9,8 +9,7 @@ class Api {
   endpoints = {
     getSkillsForUser: username => `${this.serverUrl}/api/skills/${username}`,
     claimSkill: username => `${this.serverUrl}/api/claims/${username}`,
-    getClaimsForNotUser: username =>
-      `${this.serverUrl}/api/claims/not/${username}`,
+    getClaims: username => `${this.serverUrl}/api/claims`,
     endorse: claimId => `${this.serverUrl}/api/claims/${claimId}/endorse`,
     addSkill: () => `${this.serverUrl}/api/skills`,
     editSkill: () => `${this.serverUrl}/api/skills`,
@@ -44,8 +43,8 @@ class Api {
     });
   };
 
-  getClaimsForNotUser = async username => {
-    const response = await fetch(this.endpoints.getClaimsForNotUser(username));
+  getClaims = async () => {
+    const response = await fetch(this.endpoints.getClaims());
     const json = await response.json();
     return json.data;
   };

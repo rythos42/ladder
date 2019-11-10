@@ -24,10 +24,10 @@ namespace JUDI.API.Ladder.Controllers
 		}
 
 		[HttpGet]
-		[Route("not/{username}")]
-		public ActionResult<OkResponse<IEnumerable<ClaimDto>>> GetClaimsForNotUser(string username)
+		[Route("")]
+		public ActionResult<OkResponse<IEnumerable<ClaimDto>>> GetClaims()
 		{
-			var claims = claimManager.GetClaimsForNotUser(username).ToList();
+			var claims = claimManager.GetAllClaims();
 			return new OkResponse<IEnumerable<ClaimDto>>(claims);
 		}
 
