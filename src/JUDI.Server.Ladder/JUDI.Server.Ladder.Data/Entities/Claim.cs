@@ -14,5 +14,9 @@ namespace JUDI.Server.Ladder.Data.Entities
 		public string ClaimEvidence { get; set; }
 		public string TaggedEndorserEmails { get; set; }
 		public virtual ICollection<ClaimMessage> Messages { get; set; } = new List<ClaimMessage>();
+
+		// This denormalizes the data a bit, because a claim is endorsed if this is true and also if there exists and endorsement for it.
+		// Unfortunately, the SQL required to get "all non-endorsed claims" was crazier than simply adding this flag.
+		public bool Endorsed { get; set; }
 	}
 }

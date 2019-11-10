@@ -22,9 +22,9 @@ namespace JUDI.API.Ladder.Controllers
 
 		[HttpGet]
 		[Route("")]
-		public ActionResult<OkResponse<IEnumerable<ClaimDto>>> GetClaims()
+		public ActionResult<OkResponse<IEnumerable<ClaimDto>>> GetAllAwaitingClaims()
 		{
-			var claims = claimManager.GetAllClaims();
+			var claims = claimManager.GetAllAwaitingClaims();
 			return new OkResponse<IEnumerable<ClaimDto>>(claims);
 		}
 
@@ -42,12 +42,12 @@ namespace JUDI.API.Ladder.Controllers
 
 		[HttpPost]
 		[Route("{claimId}/endorse")]
-		public ActionResult Endorse(int claimId, EndorseClaimDto endorseClaimDto)
+		public async Task<ActionResult> Endorse(int claimId, EndorseClaimDto endorseClaimDto)
 		{
 			if (endorseClaimDto == null)
 				throw new ArgumentNullException(nameof(endorseClaimDto));
 
-			endorsementManager.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.Message);
+			await endorsementManager.AddEndorsement(claimId, endorseClaimDto.EndorserUsername, endorseClaimDto.Message).ConfigureAwait(false);
 			return Ok();
 		}
 

@@ -22,6 +22,8 @@ namespace JUDI.Server.Ladder.Business
 			Message message = claimRepository.AddMessage(claimId, endorsingUsername, endorsementMessage);
 			endorsementRepository.AddEndorsement(claimId, endorsingUsername, message);
 
+			claimRepository.SetClaimToEndorsed(claimId);
+
 			var claim = claimRepository.GetClaim(claimId);
 			await emailManager.SendNewMessageEmailTo(claim.ClaimingUsername, endorsingUsername).ConfigureAwait(false);
 		}

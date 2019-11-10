@@ -44,7 +44,7 @@ namespace JUDI.Server.Ladder.Data
 						.ToList()
 						.Select(AssembleClaimMessageDto),
 					ClaimDate = claim.ClaimDate,
-					Endorsed = dbContext.Endorsements.Any(endorsement => endorsement.EndorsedClaim.Id == claim.Id)
+					Endorsed = claim.Endorsed
 				});
 		}
 
@@ -87,6 +87,13 @@ namespace JUDI.Server.Ladder.Data
 				.Where(claim => claim.Id == claimId)
 				.SelectMany(claim => claim.Messages)
 				.Select(AssembleClaimMessageDto);
+		}
+
+		public void SetClaimToEndorsed(int claimId)
+		{
+			Claim claim = dbContext.Claims.Find(claimId);
+			claim.Endorsed = true;
+			dbContext.SaveChanges();
 		}
 	}
 }

@@ -16,9 +16,9 @@ namespace JUDI.Server.Ladder.Business
 			this.emailManager = emailManager;
 		}
 
-		public IEnumerable<ClaimDto> GetAllClaims()
+		public IEnumerable<ClaimDto> GetAllAwaitingClaims()
 		{
-			return claimRepository.GetClaims(claim => true);
+			return claimRepository.GetClaims(claim => claim.Endorsed == false);
 		}
 
 		public IEnumerable<ClaimDto> GetClaims(string username)
