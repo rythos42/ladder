@@ -37,6 +37,28 @@ namespace JUDI.Server.Ladder.Data
 				   };
 		}
 
+		public IEnumerable<ClaimDto> GetClaims(string username)
+		{
+			return from claim in dbContext.Claims
+				   from skill in dbContext.Skills
+						.Where(skill => skill.Id == claim.Skill.Id)
+				   where claim.ClaimingUsername == username
+				   select new ClaimDto
+				   {
+					   Id = claim.Id,
+					   FromUsername = claim.ClaimingUsername,
+					   LevelId = skill.Level.Id,
+					   SkillSummary = skill.Summary,
+					   ClaimEvidence = claim.ClaimEvidence,
+					   Messages = claim.Messages.Select(claimMessage => new ClaimMessageDto
+					   {
+						   AuthorUsername = claimMessage.Message.AuthorUsername,
+						   Text = claimMessage.Message.Text,
+						   WrittenOnDate = claimMessage.Message.WrittenOnDate
+					   })
+				   };
+		}
+
 		public void AddClaim(string username, int skillId, string claimEvidence, string endorserEmails)
 		{
 			dbContext.Claims.Add(new Claim

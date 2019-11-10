@@ -1,5 +1,5 @@
 ﻿using JUDI.API.Ladder.Contract;
-using JUDI.Server.Ladder.Data;
+using JUDI.Server.Ladder.Business;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JUDI.API.Ladder.Controllers
@@ -8,22 +8,18 @@ namespace JUDI.API.Ladder.Controllers
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-		private readonly EndorsementRepository endorsementRepository;
+		private readonly UserManager userManager;
 
-		public UserController(EndorsementRepository endorsementRepository)
+		public UserController(UserManager userManager)
 		{
-			this.endorsementRepository = endorsementRepository;
+			this.userManager = userManager;
 		}
 
 		[HttpGet]
 		[Route("{username}")]
 		public ActionResult<OkResponse<UserProfileDto>> GetUserProfile(string username)
 		{
-			return Ok(new OkResponse<UserProfileDto>(new UserProfileDto
-			{
-				ClaimCount = endorsementRepository.GetEndorsedClaimsCountForUser(username),
-				EndorsementCount = endorsementRepository.GetEndorsementCountForUser(username)
-			}));
+			return Ok(new OkResponse<UserProfileDto>(userManager.GetUserProfile(username)));
 		}
 	}
 }

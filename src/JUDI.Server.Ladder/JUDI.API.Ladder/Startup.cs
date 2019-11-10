@@ -32,6 +32,7 @@ namespace JUDI.API.Ladder
 
 			services.AddScoped<EmailManager>();
 			services.AddScoped<EndorsementManager>();
+			services.AddScoped<UserManager>();
 
 			var emailConfiguration = new EmailConfiguration();
 			Configuration.Bind("Email", emailConfiguration);

@@ -8,7 +8,7 @@ export default {
     claims: [],
     api: null,
     snackbarMessage: "",
-    userProfile: {},
+    userProfile: { claims: [] },
     levels: []
   },
   reducers: {
@@ -169,6 +169,13 @@ export default {
 
     async getUserProfile(username, state) {
       const data = await state.application.api.getUserProfile(username);
+
+      data.claims.forEach(claim => {
+        claim.level = state.application.levels.find(
+          level => level.id === claim.levelId
+        );
+      });
+
       dispatch.application.setUserProfile(data);
     },
 
