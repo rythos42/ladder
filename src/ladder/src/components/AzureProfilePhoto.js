@@ -5,13 +5,15 @@ import styles from "./AzureProfilePhoto.module.css";
 
 class AzureProfilePhoto extends React.Component {
   render() {
-    const src = `${this.props.profilePhotoUrl}?objectId=${this.props.objectId}`;
-    return <img className={styles.photo} alt="User profile" src={src} />;
+    if (!this.props.profilePhotoData) return null;
+
+    const blobUrl = window.URL.createObjectURL(this.props.profilePhotoData);
+    return <img className={styles.photo} alt="User profile" src={blobUrl} />;
   }
 }
 
-function mapState({ config: { profilePhotoUrl } }) {
-  return { profilePhotoUrl };
+function mapState({ auth: { profilePhotoData } }) {
+  return { profilePhotoData };
 }
 
 export default connect(mapState)(AzureProfilePhoto);

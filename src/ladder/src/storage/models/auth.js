@@ -22,7 +22,7 @@ export default {
     msalApp: null,
     error: "",
     account: null,
-    graphProfile: {}
+    profilePhotoData: null
   },
   reducers: {
     setMsalApp(state, msalApp) {
@@ -43,10 +43,10 @@ export default {
         account: account
       };
     },
-    setGraphProfile(state, graphProfile) {
+    setProfilePhotoData(state, profilePhotoData) {
       return {
         ...state,
-        graphProfile
+        profilePhotoData
       };
     }
   },
@@ -65,7 +65,7 @@ export default {
       });
     },
 
-    async initializeAzureAccess(account, state) {
+    async initializeAzureProfile(_, state) {
       const tokenResponse = await dispatch.auth
         .acquireToken(GRAPH_REQUESTS.LOGIN)
         .catch(error => {
@@ -73,14 +73,15 @@ export default {
         });
 
       if (tokenResponse) {
-        const response = await fetch(GRAPH_ENDPOINTS.ME, {
+        const response = await fetch(`${GRAPH_ENDPOINTS.ME}/photo/$value`, {
           headers: {
             Authorization: `Bearer ${tokenResponse.accessToken}`
           }
         });
 
-        const graphProfile = response.json();
-        if (graphProfile) dispatch.auth.setGraphProfile(graphProfile);
+        const profilePhotoData = await response.blob();
+        if (profilePhotoData && !profilePhotoData.error)
+          dispatch.auth.setProfilePhotoData(profilePhotoData);
       }
     },
 
@@ -106,7 +107,7 @@ export default {
       const account = msalApp.getAccount();
       dispatch.auth.setAccount(account);
 
-      if (account) dispatch.auth.initializeAzureAccess(account);
+      if (account) dispatch.auth.initializeAzureProfile(account);
     },
 
     async requestSignIn(_, state) {
@@ -118,7 +119,7 @@ export default {
 
       if (loginResponse) {
         dispatch.auth.setAccount(loginResponse.account);
-        dispatch.auth.initializeAzureAccess(loginResponse.account);
+        dispatch.auth.initializeAzureProfile(loginResponse.account);
       }
     },
 

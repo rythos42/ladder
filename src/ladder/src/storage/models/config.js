@@ -5,8 +5,7 @@ export default {
     serverUrl: "",
     clientId: "",
     authority: "",
-    redirectUri: "",
-    profilePhotoUrl: ""
+    redirectUri: ""
   },
   reducers: {
     setConfig(state, config) {
@@ -14,8 +13,7 @@ export default {
         serverUrl: config.application.serverUrl,
         clientId: config.auth.clientId,
         authority: config.auth.authority,
-        redirectUri: config.auth.redirectUri,
-        profilePhotoUrl: config.auth.profilePhotoUrl
+        redirectUri: config.auth.redirectUri
       };
     }
   },
