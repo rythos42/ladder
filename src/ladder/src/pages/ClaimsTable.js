@@ -97,11 +97,14 @@ class ClaimsTable extends React.Component {
                         <TableCell>{claim.level.name}</TableCell>
                         <TableCell>{claim.skillSummary}</TableCell>
                         <TableCell>
-                          <Button
-                            onClick={() => this.openEndorsementDialog(claim)}
-                          >
-                            Endorse
-                          </Button>
+                          {claim.fromUsername !==
+                            this.props.accountUsername && (
+                            <Button
+                              onClick={() => this.openEndorsementDialog(claim)}
+                            >
+                              Endorse
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     </React.Fragment>
@@ -129,7 +132,11 @@ class ClaimsTable extends React.Component {
 }
 
 function mapState({ application: { claims }, auth: { account } }) {
-  return { claims, hasAccount: account !== null };
+  return {
+    claims,
+    hasAccount: account !== null,
+    accountUsername: account && account.userName
+  };
 }
 
 function mapDispatch({ application }) {
