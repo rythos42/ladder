@@ -30,7 +30,8 @@ namespace JUDI.Server.Ladder.Data
 					LevelId = claim.Skill.Level.Id,
 					SkillSummary = claim.Skill.Summary,
 					ClaimEvidence = claim.ClaimEvidence,
-					Messages = claim.Messages.Select(AssembleClaimMessageDto)
+					Messages = claim.Messages.Select(AssembleClaimMessageDto),
+					ClaimDate = claim.ClaimDate
 				});
 		}
 

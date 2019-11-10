@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JUDI.API.Ladder.Contract
 {
@@ -10,5 +11,6 @@ namespace JUDI.API.Ladder.Contract
 		public string SkillSummary { get; set; }
 		public string ClaimEvidence { get; set; }
 		public IEnumerable<ClaimMessageDto> Messages { get; set; }
+		public DateTime ClaimDate { get; set; }
 	}
 }

@@ -12,6 +12,10 @@ import styles from "./Profile.module.css";
 import AzureProfilePhoto from "../components/AzureProfilePhoto";
 
 class Profile extends React.Component {
+  formatDate = date => {
+    return new Date(date).toDateString();
+  };
+
   render() {
     if (!this.props.account) return null;
 
@@ -33,6 +37,7 @@ class Profile extends React.Component {
               <TableRow>
                 <TableCell>Level</TableCell>
                 <TableCell>Summary</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -48,6 +53,7 @@ class Profile extends React.Component {
                     <TableRow>
                       <TableCell>{claim.level.name}</TableCell>
                       <TableCell>{claim.skillSummary}</TableCell>
+                      <TableCell>{this.formatDate(claim.claimDate)}</TableCell>
                     </TableRow>
                   </React.Fragment>
                 ))
