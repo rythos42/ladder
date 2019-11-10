@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JUDI.API.Ladder.Contract;
 using JUDI.Server.Ladder.Data.Entities;
+using JUDI.Server.Ladder.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace JUDI.Server.Ladder.Data
@@ -44,7 +45,8 @@ namespace JUDI.Server.Ladder.Data
 						.ToList()
 						.Select(AssembleClaimMessageDto),
 					ClaimDate = claim.ClaimDate,
-					Endorsed = claim.Endorsed
+					Endorsed = claim.Endorsed,
+					RequestedEndorserUsernames = Email.GetEmails(claim.TaggedEndorserEmails)
 				});
 		}
 

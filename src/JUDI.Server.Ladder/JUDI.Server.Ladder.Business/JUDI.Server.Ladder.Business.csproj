@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JUDI.Server.Ladder.Data\JUDI.Server.Ladder.Data.csproj" />
+    <ProjectReference Include="..\JUDI.Server.Ladder.Utils\JUDI.Server.Ladder.Utils.csproj" />
   </ItemGroup>
 
 </Project>

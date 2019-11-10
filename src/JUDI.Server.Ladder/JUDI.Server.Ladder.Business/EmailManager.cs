@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using JUDI.Server.Ladder.Utils;
 using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -45,7 +46,7 @@ namespace JUDI.Server.Ladder.Business
 
 		public async Task Send(string toString, string subject, string content)
 		{
-			var recipients = toString.Split(new[] { ',', ';' }).Select(email => new EmailAddress(email)).ToList();
+			var recipients = Email.GetEmails(toString).Select(email => new EmailAddress(email)).ToList();
 			var message = new SendGridMessage();
 			message.AddTos(recipients);
 			message.SetSubject(subject);

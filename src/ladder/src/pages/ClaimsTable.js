@@ -7,8 +7,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 
 import * as tableHelper from "./../TableHelper";
-import SortableTableHead from "./../components/SortableTableHead";
+import SortableTableHead from "../components/SortableTableHead";
 import EndorsementDialog from "../components/EndorsementDialog";
+import AzureProfilePhoto from "../components/AzureProfilePhoto";
 
 class ClaimsTable extends React.Component {
   state = {
@@ -62,6 +63,7 @@ class ClaimsTable extends React.Component {
     { label: "User", id: "user" },
     { label: "Level", id: "level" },
     { label: "Summary", id: "summary" },
+    { label: "Endorser", id: "requestedEndorsers" },
     { label: "", id: "endorse" }
   ];
 
@@ -96,6 +98,16 @@ class ClaimsTable extends React.Component {
                         <TableCell>{claim.fromUsername}</TableCell>
                         <TableCell>{claim.level.name}</TableCell>
                         <TableCell>{claim.skillSummary}</TableCell>
+                        <TableCell>
+                          {claim.requestedEndorserUsernames.map(username => (
+                            <AzureProfilePhoto
+                              key={username}
+                              objectId={username}
+                              width={32}
+                              height={32}
+                            />
+                          ))}
+                        </TableCell>
                         <TableCell>
                           {claim.fromUsername !==
                             this.props.accountUsername && (

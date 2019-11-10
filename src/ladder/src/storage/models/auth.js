@@ -14,15 +14,15 @@ const GRAPH_REQUESTS = {
 };
 
 const GRAPH_ENDPOINTS = {
-  ME: "https://graph.microsoft.com/v1.0/me"
+  ME: "https://graph.microsoft.com/v1.0/me",
+  USERS: "https://graph.microsoft.com/v1.0/users"
 };
 
 export default {
   state: {
     msalApp: null,
     error: "",
-    account: null,
-    profilePhotoData: null
+    account: null
   },
   reducers: {
     setMsalApp(state, msalApp) {
@@ -42,12 +42,6 @@ export default {
         ...state,
         account: account
       };
-    },
-    setProfilePhotoData(state, profilePhotoData) {
-      return {
-        ...state,
-        profilePhotoData
-      };
     }
   },
   effects: dispatch => ({
@@ -65,7 +59,7 @@ export default {
       });
     },
 
-    async initializeAzureProfile(_, state) {
+    async getProfilePhotoData(objectId, state) {
       const tokenResponse = await dispatch.auth
         .acquireToken(GRAPH_REQUESTS.LOGIN)
         .catch(error => {
@@ -73,15 +67,16 @@ export default {
         });
 
       if (tokenResponse) {
-        const response = await fetch(`${GRAPH_ENDPOINTS.ME}/photo/$value`, {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.accessToken}`
+        const response = await fetch(
+          `${GRAPH_ENDPOINTS.USERS}/${objectId}/photo/$value`,
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.accessToken}`
+            }
           }
-        });
+        );
 
-        const profilePhotoData = await response.blob();
-        if (profilePhotoData && !profilePhotoData.error)
-          dispatch.auth.setProfilePhotoData(profilePhotoData);
+        return await response.blob();
       }
     },
 
@@ -106,8 +101,6 @@ export default {
 
       const account = msalApp.getAccount();
       dispatch.auth.setAccount(account);
-
-      if (account) dispatch.auth.initializeAzureProfile(account);
     },
 
     async requestSignIn(_, state) {
@@ -117,10 +110,7 @@ export default {
           dispatch.auth.setAuthError(error.message);
         });
 
-      if (loginResponse) {
-        dispatch.auth.setAccount(loginResponse.account);
-        dispatch.auth.initializeAzureProfile(loginResponse.account);
-      }
+      if (loginResponse) dispatch.auth.setAccount(loginResponse.account);
     },
 
     async requestSignOut(_, state) {

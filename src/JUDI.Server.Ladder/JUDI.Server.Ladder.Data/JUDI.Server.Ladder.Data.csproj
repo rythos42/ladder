@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JUDI.API.Ladder.Contract\JUDI.API.Ladder.Contract.csproj" />
+    <ProjectReference Include="..\JUDI.Server.Ladder.Utils\JUDI.Server.Ladder.Utils.csproj" />
   </ItemGroup>
 
 </Project>

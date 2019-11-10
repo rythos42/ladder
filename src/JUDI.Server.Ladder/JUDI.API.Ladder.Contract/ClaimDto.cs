@@ -13,5 +13,6 @@ namespace JUDI.API.Ladder.Contract
 		public IEnumerable<ClaimMessageDto> Messages { get; set; }
 		public DateTime ClaimDate { get; set; }
 		public bool Endorsed { get; set; }
+		public IEnumerable<string> RequestedEndorserUsernames { get; set; }
 	}
 }
