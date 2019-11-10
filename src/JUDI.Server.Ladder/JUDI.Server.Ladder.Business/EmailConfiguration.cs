@@ -4,6 +4,7 @@
 	{
 		public string SendGridApiKey { get; set; }
 		public SingleEmailConfiguration Claim { get; set; }
+		public SingleEmailConfiguration NewMessage { get; set; }
 		public string FromEmail { get; set; }
 	}
 

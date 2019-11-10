@@ -11,6 +11,7 @@ namespace JUDI.Server.Ladder.Business
 	{
 		private readonly SendGridClient client;
 		private readonly SingleEmailConfiguration claimEmail;
+		private readonly SingleEmailConfiguration newMessageEmail;
 		private readonly string fromEmail;
 		private readonly string ladderSiteUrl;
 
@@ -19,6 +20,7 @@ namespace JUDI.Server.Ladder.Business
 		public EmailManager(EmailConfiguration emailConfiguration, ApplicationConfiguration applicationConfiguration, ILogger<EmailManager> logger)
 		{
 			claimEmail = emailConfiguration.Claim;
+			newMessageEmail = emailConfiguration.NewMessage;
 			client = new SendGridClient(emailConfiguration.SendGridApiKey);
 			fromEmail = emailConfiguration.FromEmail;
 
@@ -27,16 +29,23 @@ namespace JUDI.Server.Ladder.Business
 			this.logger = logger;
 		}
 
-		public async Task SendEmailToEndorsers(string emailString, string whoToEndorse)
+		public async Task SendEmailToEndorsers(string toString, string whoToEndorse)
 		{
 			var subject = claimEmail.Subject.Replace("{username}", whoToEndorse);
 			var content = claimEmail.Content.Replace("{ladderSiteUrl}", ladderSiteUrl);
-			await Send(emailString, subject, content);
+			await Send(toString, subject, content);
 		}
 
-		public async Task Send(string emailString, string subject, string content)
+		public async Task SendNewMessageEmailTo(string toString, string fromEmail)
 		{
-			var recipients = emailString.Split(new[] { ',', ';' }).Select(email => new EmailAddress(email)).ToList();
+			var subject = newMessageEmail.Subject.Replace("{fromEmail}", fromEmail);
+			var content = newMessageEmail.Content.Replace("{ladderSiteUrl}", ladderSiteUrl);
+			await Send(toString, subject, content);
+		}
+
+		public async Task Send(string toString, string subject, string content)
+		{
+			var recipients = toString.Split(new[] { ',', ';' }).Select(email => new EmailAddress(email)).ToList();
 			var message = new SendGridMessage();
 			message.AddTos(recipients);
 			message.SetSubject(subject);

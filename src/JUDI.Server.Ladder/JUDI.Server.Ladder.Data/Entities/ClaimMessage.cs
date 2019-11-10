@@ -7,6 +7,8 @@ namespace JUDI.Server.Ladder.Data.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 
+		public int ClaimId { get; set; }
+
 		public virtual Message Message { get; set; }
 	}
 }

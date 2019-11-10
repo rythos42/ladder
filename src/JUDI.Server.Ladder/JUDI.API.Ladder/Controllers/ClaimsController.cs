@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using JUDI.API.Ladder.Contract;
 using JUDI.Server.Ladder.Business;
@@ -13,13 +12,11 @@ namespace JUDI.API.Ladder.Controllers
 	public class ClaimsController : ControllerBase
 	{
 		private readonly EndorsementManager endorsementManager;
-		private readonly EmailManager emailManager;
 		private readonly ClaimManager claimManager;
 
-		public ClaimsController(ClaimManager claimManager, EndorsementManager endorsementManager, EmailManager emailManager)
+		public ClaimsController(ClaimManager claimManager, EndorsementManager endorsementManager)
 		{
 			this.endorsementManager = endorsementManager;
-			this.emailManager = emailManager;
 			this.claimManager = claimManager;
 		}
 
@@ -38,9 +35,7 @@ namespace JUDI.API.Ladder.Controllers
 			if (claimSkillDto == null)
 				throw new ArgumentNullException(nameof(claimSkillDto));
 
-			claimManager.AddClaim(username, claimSkillDto.SkillId, claimSkillDto.ClaimEvidence, claimSkillDto.EndorserEmails);
-
-			await emailManager.SendEmailToEndorsers(claimSkillDto.EndorserEmails, username).ConfigureAwait(false);
+			await claimManager.AddClaim(username, claimSkillDto.SkillId, claimSkillDto.ClaimEvidence, claimSkillDto.EndorserEmails).ConfigureAwait(false);
 
 			return Ok();
 		}
@@ -58,12 +53,12 @@ namespace JUDI.API.Ladder.Controllers
 
 		[HttpPost]
 		[Route("{claimId}/message")]
-		public ActionResult AddMessage(int claimId, AddMessageDto addMessageDto)
+		public async Task<ActionResult> AddMessage(int claimId, AddMessageDto addMessageDto)
 		{
 			if (addMessageDto == null)
 				throw new ArgumentNullException(nameof(addMessageDto));
 
-			claimManager.AddMessage(claimId, addMessageDto.AuthorUsername, addMessageDto.Message);
+			await claimManager.AddMessage(claimId, addMessageDto.AuthorUsername, addMessageDto.Message).ConfigureAwait(false);
 			return Ok();
 		}
 
