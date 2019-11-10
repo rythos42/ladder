@@ -8,13 +8,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 import EditSkillDialog from "./EditSkillDialog";
 import EndorsementsIcon from "./endorsements.png";
 import SkillsIcon from "./skills.png";
 import styles from "./Header.module.css";
-import { IconButton } from "@material-ui/core";
 
 class Header extends React.Component {
   state = {
@@ -23,7 +21,9 @@ class Header extends React.Component {
   };
 
   componentDidMount() {
-    const loadingTabIndex = this.props.location.pathname === "/skills" ? 0 : 1;
+    const loadingTabIndex = this.tabs.findIndex(
+      tab => tab.to === this.props.location.pathname
+    );
     this.setState({ selectedTabIndex: loadingTabIndex });
   }
 
@@ -44,6 +44,12 @@ class Header extends React.Component {
     this.setState({ selectedTabIndex: newValue });
   };
 
+  tabs = [
+    { label: "Skills", to: "/skills" },
+    { label: "Claims", to: "/claims" },
+    { label: "Profile", to: "/profile" }
+  ];
+
   render() {
     return (
       <AppBar position="static" color="default">
@@ -55,8 +61,14 @@ class Header extends React.Component {
               value={this.state.selectedTabIndex}
               onChange={this.handleTabChange}
             >
-              <Tab label="Skills" to="/skills" component={Link} />
-              <Tab label="Claims" to="/claims" component={Link} />
+              {this.tabs.map(tab => (
+                <Tab
+                  key={tab.to}
+                  label={tab.label}
+                  to={tab.to}
+                  component={Link}
+                />
+              ))}
             </Tabs>
           </Grid>
           <Grid container item xs={6} justify="flex-end">
@@ -86,9 +98,6 @@ class Header extends React.Component {
                     />
                   </Badge>
                 </div>
-                <IconButton to="/profile" component={Link}>
-                  <AccountBoxIcon />
-                </IconButton>
                 <Button onClick={this.openAddSkillDialog}>Add Skill</Button>
                 <Button onClick={this.props.requestSignOut}>Sign Out</Button>
               </>
