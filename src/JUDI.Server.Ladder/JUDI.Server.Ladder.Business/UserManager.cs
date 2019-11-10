@@ -6,12 +6,12 @@ namespace JUDI.Server.Ladder.Business
 	public class UserManager
 	{
 		private readonly EndorsementRepository endorsementRepository;
-		private readonly ClaimRepository claimRepository;
+		private readonly ClaimManager claimManager;
 
-		public UserManager(ClaimRepository claimRepository, EndorsementRepository endorsementRepository)
+		public UserManager(ClaimManager claimManager, EndorsementRepository endorsementRepository)
 		{
 			this.endorsementRepository = endorsementRepository;
-			this.claimRepository = claimRepository;
+			this.claimManager = claimManager;
 		}
 
 		public UserProfileDto GetUserProfile(string username)
@@ -20,7 +20,7 @@ namespace JUDI.Server.Ladder.Business
 			{
 				ClaimCount = endorsementRepository.GetEndorsedClaimsCountForUser(username),
 				EndorsementCount = endorsementRepository.GetEndorsementCountForUser(username),
-				Claims = claimRepository.GetClaims(username)
+				Claims = claimManager.GetClaims(username)
 			};
 		}
 	}

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using JUDI.API.Ladder.Contract;
 using JUDI.Server.Ladder.Business;
-using JUDI.Server.Ladder.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JUDI.API.Ladder.Controllers
@@ -13,22 +12,22 @@ namespace JUDI.API.Ladder.Controllers
 	[ApiController]
 	public class ClaimsController : ControllerBase
 	{
-		private readonly ClaimRepository claimRepository;
 		private readonly EndorsementManager endorsementManager;
 		private readonly EmailManager emailManager;
+		private readonly ClaimManager claimManager;
 
-		public ClaimsController(ClaimRepository claimRepository, EndorsementManager endorsementManager, EmailManager emailManager)
+		public ClaimsController(ClaimManager claimManager, EndorsementManager endorsementManager, EmailManager emailManager)
 		{
-			this.claimRepository = claimRepository;
 			this.endorsementManager = endorsementManager;
 			this.emailManager = emailManager;
+			this.claimManager = claimManager;
 		}
 
 		[HttpGet]
 		[Route("not/{username}")]
 		public ActionResult<OkResponse<IEnumerable<ClaimDto>>> GetClaimsForNotUser(string username)
 		{
-			var claims = claimRepository.GetClaimsForNotUser(username).ToList();
+			var claims = claimManager.GetClaimsForNotUser(username).ToList();
 			return new OkResponse<IEnumerable<ClaimDto>>(claims);
 		}
 
@@ -39,7 +38,7 @@ namespace JUDI.API.Ladder.Controllers
 			if (claimSkillDto == null)
 				throw new ArgumentNullException(nameof(claimSkillDto));
 
-			claimRepository.AddClaim(username, claimSkillDto.SkillId, claimSkillDto.ClaimEvidence, claimSkillDto.EndorserEmails);
+			claimManager.AddClaim(username, claimSkillDto.SkillId, claimSkillDto.ClaimEvidence, claimSkillDto.EndorserEmails);
 
 			await emailManager.SendEmailToEndorsers(claimSkillDto.EndorserEmails, username).ConfigureAwait(false);
 
@@ -64,7 +63,7 @@ namespace JUDI.API.Ladder.Controllers
 			if (addMessageDto == null)
 				throw new ArgumentNullException(nameof(addMessageDto));
 
-			claimRepository.AddMessage(claimId, addMessageDto.AuthorUsername, addMessageDto.Message);
+			claimManager.AddMessage(claimId, addMessageDto.AuthorUsername, addMessageDto.Message);
 			return Ok();
 		}
 
@@ -72,7 +71,7 @@ namespace JUDI.API.Ladder.Controllers
 		[Route("{claimId}/message")]
 		public ActionResult<OkResponse<IEnumerable<ClaimMessageDto>>> GetMessages(int claimId)
 		{
-			var messages = claimRepository.GetMessages(claimId);
+			IEnumerable<ClaimMessageDto> messages = claimManager.GetMessages(claimId);
 			return new OkResponse<IEnumerable<ClaimMessageDto>>(messages);
 		}
 	}

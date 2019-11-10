@@ -13,6 +13,6 @@ namespace JUDI.Server.Ladder.Data.Entities
 		public DateTime ClaimDate { get; set; }
 		public string ClaimEvidence { get; set; }
 		public string TaggedEndorserEmails { get; set; }
-		public ICollection<ClaimMessage> Messages { get; set; } = new List<ClaimMessage>();
+		public virtual ICollection<ClaimMessage> Messages { get; set; } = new List<ClaimMessage>();
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JUDI.API.Ladder.Contract;
 using JUDI.Server.Ladder.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace JUDI.Server.Ladder.Data
 {
@@ -15,48 +16,32 @@ namespace JUDI.Server.Ladder.Data
 			this.dbContext = dbContext;
 		}
 
-		public IEnumerable<ClaimDto> GetClaimsForNotUser(string username)
+		public IEnumerable<ClaimDto> GetClaims(Func<Claim, bool> filter)
 		{
-			return from claim in dbContext.Claims
-				   from skill in dbContext.Skills
-						.Where(skill => skill.Id == claim.Skill.Id)
-				   where claim.ClaimingUsername != username
-				   select new ClaimDto
-				   {
-					   Id = claim.Id,
-					   FromUsername = claim.ClaimingUsername,
-					   LevelId = skill.Level.Id,
-					   SkillSummary = skill.Summary,
-					   ClaimEvidence = claim.ClaimEvidence,
-					   Messages = claim.Messages.Select(claimMessage => new ClaimMessageDto
-					   {
-						   AuthorUsername = claimMessage.Message.AuthorUsername,
-						   Text = claimMessage.Message.Text,
-						   WrittenOnDate = claimMessage.Message.WrittenOnDate
-					   })
-				   };
+			return dbContext
+				.Claims
+				.Include(claim => claim.Skill)
+					.ThenInclude(skill => skill.Level)
+				.Where(filter)
+				.Select(claim => new ClaimDto
+				{
+					Id = claim.Id,
+					FromUsername = claim.ClaimingUsername,
+					LevelId = claim.Skill.Level.Id,
+					SkillSummary = claim.Skill.Summary,
+					ClaimEvidence = claim.ClaimEvidence,
+					Messages = claim.Messages.Select(AssembleClaimMessageDto)
+				});
 		}
 
-		public IEnumerable<ClaimDto> GetClaims(string username)
+		private ClaimMessageDto AssembleClaimMessageDto(ClaimMessage claimMessage)
 		{
-			return from claim in dbContext.Claims
-				   from skill in dbContext.Skills
-						.Where(skill => skill.Id == claim.Skill.Id)
-				   where claim.ClaimingUsername == username
-				   select new ClaimDto
-				   {
-					   Id = claim.Id,
-					   FromUsername = claim.ClaimingUsername,
-					   LevelId = skill.Level.Id,
-					   SkillSummary = skill.Summary,
-					   ClaimEvidence = claim.ClaimEvidence,
-					   Messages = claim.Messages.Select(claimMessage => new ClaimMessageDto
-					   {
-						   AuthorUsername = claimMessage.Message.AuthorUsername,
-						   Text = claimMessage.Message.Text,
-						   WrittenOnDate = claimMessage.Message.WrittenOnDate
-					   })
-				   };
+			return new ClaimMessageDto
+			{
+				AuthorUsername = claimMessage.Message.AuthorUsername,
+				Text = claimMessage.Message.Text,
+				WrittenOnDate = claimMessage.Message.WrittenOnDate
+			};
 		}
 
 		public void AddClaim(string username, int skillId, string claimEvidence, string endorserEmails)
@@ -87,12 +72,7 @@ namespace JUDI.Server.Ladder.Data
 				.Claims
 				.Where(claim => claim.Id == claimId)
 				.SelectMany(claim => claim.Messages)
-				.Select(claimMessage => new ClaimMessageDto
-				{
-					AuthorUsername = claimMessage.Message.AuthorUsername,
-					Text = claimMessage.Message.Text,
-					WrittenOnDate = claimMessage.Message.WrittenOnDate
-				});
+				.Select(AssembleClaimMessageDto);
 		}
 	}
 }
