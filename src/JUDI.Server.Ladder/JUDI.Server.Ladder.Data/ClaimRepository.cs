@@ -23,6 +23,7 @@ namespace JUDI.Server.Ladder.Data
 				.Include(claim => claim.Skill)
 					.ThenInclude(skill => skill.Level)
 				.Where(filter)
+				.ToList()   // load all requested claims, to prevent "Multiple open DataReaders" error
 				.Select(claim => new ClaimDto
 				{
 					Id = claim.Id,
@@ -31,7 +32,8 @@ namespace JUDI.Server.Ladder.Data
 					SkillSummary = claim.Skill.Summary,
 					ClaimEvidence = claim.ClaimEvidence,
 					Messages = claim.Messages.Select(AssembleClaimMessageDto),
-					ClaimDate = claim.ClaimDate
+					ClaimDate = claim.ClaimDate,
+					Endorsed = dbContext.Endorsements.Any(endorsement => endorsement.EndorsedClaim.Id == claim.Id)
 				});
 		}
 

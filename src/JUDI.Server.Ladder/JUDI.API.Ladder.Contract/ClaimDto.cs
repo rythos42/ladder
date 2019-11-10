@@ -12,5 +12,6 @@ namespace JUDI.API.Ladder.Contract
 		public string ClaimEvidence { get; set; }
 		public IEnumerable<ClaimMessageDto> Messages { get; set; }
 		public DateTime ClaimDate { get; set; }
+		public bool Endorsed { get; set; }
 	}
 }

@@ -8,6 +8,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
+
 import styles from "./Profile.module.css";
 import AzureProfilePhoto from "../components/AzureProfilePhoto";
 
@@ -38,6 +41,7 @@ class Profile extends React.Component {
                 <TableCell>Level</TableCell>
                 <TableCell>Summary</TableCell>
                 <TableCell>Date</TableCell>
+                <TableCell>Endorsed</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -54,6 +58,9 @@ class Profile extends React.Component {
                       <TableCell>{claim.level.name}</TableCell>
                       <TableCell>{claim.skillSummary}</TableCell>
                       <TableCell>{this.formatDate(claim.claimDate)}</TableCell>
+                      <TableCell>
+                        {claim.endorsed ? <CheckIcon /> : <CloseIcon />}
+                      </TableCell>
                     </TableRow>
                   </React.Fragment>
                 ))
