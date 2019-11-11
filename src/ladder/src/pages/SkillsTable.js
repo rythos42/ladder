@@ -100,15 +100,15 @@ class SkillsTable extends React.Component {
   setSummaryFilter = evt => {
     this.setState({
       filter: {
-        summary: evt.target.value.toLowerCase(),
-        levelId: this.state.filter.levelId
+        ...this.state.filter,
+        summary: evt.target.value.toLowerCase()
       }
     });
   };
 
   setLevelFilter = evt => {
     this.setState({
-      filter: { summary: this.state.filter.summary, levelId: evt.target.value }
+      filter: { ...this.state.filter, levelId: evt.target.value }
     });
   };
 
