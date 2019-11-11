@@ -21,9 +21,8 @@ class Header extends React.Component {
   };
 
   componentDidMount() {
-    const loadingTabIndex = this.tabs.findIndex(
-      tab => tab.to === this.props.location.pathname
-    );
+    const loadingTabIndex =
+      this.tabs.findIndex(tab => tab.to === this.props.location.pathname) || 0;
     this.setState({ selectedTabIndex: loadingTabIndex });
   }
 

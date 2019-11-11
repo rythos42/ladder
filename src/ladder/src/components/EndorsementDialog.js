@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -23,7 +24,7 @@ class EndorsementDialog extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.claim.messages.length !== this.props.claim.messages.length)
-      this.setState({ showMore: this.props.claim.messages.length > 4 });
+      this.setState({ showMore: this.props.claim.messages.length > 5 });
   }
 
   setMessage = evt => {
@@ -101,16 +102,22 @@ class EndorsementDialog extends React.Component {
         <DialogActions>
           <Button onClick={this.props.onClose}>Cancel</Button>
 
-          <Button
-            onClick={() => this.props.onEndorse(this.state.message)}
-            variant="contained"
-          >
-            Endorse
-          </Button>
+          {this.props.claim.fromUsername !== this.props.accountUsername && (
+            <Button
+              onClick={() => this.props.onEndorse(this.state.message)}
+              variant="contained"
+            >
+              Endorse
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );
   }
 }
 
-export default EndorsementDialog;
+function mapState({ auth: { account } }) {
+  return { accountUsername: account && account.userName };
+}
+
+export default connect(mapState)(EndorsementDialog);
