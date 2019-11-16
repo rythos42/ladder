@@ -88,6 +88,7 @@ namespace JUDI.Server.Ladder.Data
 				.Claims
 				.Where(claim => claim.Id == claimId)
 				.SelectMany(claim => claim.Messages)
+				.Include(claimMessage => claimMessage.Message)
 				.Select(AssembleClaimMessageDto);
 		}
 
