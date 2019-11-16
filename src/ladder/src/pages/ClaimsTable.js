@@ -14,7 +14,7 @@ import AzureProfilePhoto from "../components/AzureProfilePhoto";
 class ClaimsTable extends React.Component {
   state = {
     endorsementDialogOpen: false,
-    selectedClaim: { messages: [] },
+    selectedClaim: {},
     order: "asc",
     orderBy: "Summary"
   };

@@ -23,7 +23,15 @@ class EndorsementDialog extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps.claim.messages.length !== this.props.claim.messages.length)
+    if (!prevProps.claim.messages && !this.props.claim.messages) return;
+
+    const wereNoMessagesNowSome =
+      !prevProps.claim.messages && this.props.claim.messages;
+
+    if (
+      wereNoMessagesNowSome ||
+      prevProps.claim.messages.length !== this.props.claim.messages.length
+    )
       this.setState({ showMore: this.props.claim.messages.length > 5 });
   }
 
@@ -57,29 +65,31 @@ class EndorsementDialog extends React.Component {
             <Typography variant="caption">Claim </Typography>
             <Typography>{this.props.claim.claimEvidence}</Typography>
           </Card>
-          <Card className={styles.card}>
-            <div className={styles.comments} onScroll={this.handleScroll}>
-              <div>
-                {this.state.showMore && (
-                  <Chip
-                    icon={<KeyboardArrowUpIcon />}
-                    label="More"
-                    className={styles.moreChip}
-                  />
-                )}
-                {this.props.claim.messages.map(message => (
-                  <div key={message.writtenOnDate}>
-                    <CommentIcon />
-                    <Typography variant="caption">
-                      {message.authorUsername} -{" "}
-                      {this.formatDate(message.writtenOnDate)}
-                    </Typography>
-                    <Typography>{message.text}</Typography>
-                  </div>
-                ))}
+          {this.props.claim.messages && this.props.claim.messages.length > 0 && (
+            <Card className={styles.card}>
+              <div className={styles.comments} onScroll={this.handleScroll}>
+                <div>
+                  {this.state.showMore && (
+                    <Chip
+                      icon={<KeyboardArrowUpIcon />}
+                      label="More"
+                      className={styles.moreChip}
+                    />
+                  )}
+                  {this.props.claim.messages.map(message => (
+                    <div key={message.writtenOnDate}>
+                      <CommentIcon />
+                      <Typography variant="caption">
+                        {message.authorUsername} -{" "}
+                        {this.formatDate(message.writtenOnDate)}
+                      </Typography>
+                      <Typography>{message.text}</Typography>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          )}
           <TextField
             variant="outlined"
             value={this.state.message}
