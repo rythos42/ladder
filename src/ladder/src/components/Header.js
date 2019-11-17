@@ -76,7 +76,7 @@ class Header extends React.Component {
                 <div className={styles.iconPanel}>
                   <Badge
                     showZero={true}
-                    badgeContent={this.props.claimCount}
+                    badgeContent={this.props.endorsementCount}
                     color="primary"
                   >
                     <img
@@ -87,7 +87,7 @@ class Header extends React.Component {
                   </Badge>
                   <Badge
                     showZero={true}
-                    badgeContent={this.props.endorsementCount}
+                    badgeContent={this.props.claimCount}
                     color="primary"
                   >
                     <img
