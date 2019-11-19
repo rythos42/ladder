@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import RichTextEditor from "react-rte";
+import ReactMarkdown from "markdown-to-jsx";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -8,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
+import Link from "@material-ui/core/Link";
 import CommentIcon from "@material-ui/icons/Comment";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
@@ -17,6 +19,40 @@ class EndorsementDialog extends React.Component {
   state = {
     showMore: false,
     editorState: RichTextEditor.createEmptyValue()
+  };
+
+  options = {
+    forceBlock: true,
+    overrides: {
+      h1: {
+        component: Typography,
+        props: {
+          gutterBottom: true,
+          variant: "h4"
+        }
+      },
+      h2: {
+        component: Typography,
+        props: { gutterBottom: true, variant: "h6" }
+      },
+      h3: {
+        component: Typography,
+        props: { gutterBottom: true, variant: "subtitle1" }
+      },
+      h4: {
+        component: Typography,
+        props: { gutterBottom: true, variant: "caption", paragraph: true }
+      },
+      p: { component: Typography, props: { paragraph: true } },
+      a: { component: Link },
+      li: {
+        component: ({ classes, ...props }) => (
+          <li>
+            <Typography component="span" {...props} />
+          </li>
+        )
+      }
+    }
   };
 
   componentDidUpdate(prevProps) {
@@ -63,10 +99,14 @@ class EndorsementDialog extends React.Component {
         fullWidth
       >
         <DialogContent className={styles.dialogContent}>
-          <Card className={styles.card}>
-            <Typography variant="caption">Claim </Typography>
-            <Typography>{this.props.claim.claimEvidence}</Typography>
-          </Card>
+          {this.props.claim.claimEvidence && (
+            <Card className={styles.card}>
+              <Typography variant="caption">Claim </Typography>
+              <ReactMarkdown options={this.options}>
+                {this.props.claim.claimEvidence}
+              </ReactMarkdown>
+            </Card>
+          )}
           {this.props.claim.messages && this.props.claim.messages.length > 0 && (
             <Card className={styles.card}>
               <div className={styles.comments} onScroll={this.handleScroll}>
@@ -85,7 +125,12 @@ class EndorsementDialog extends React.Component {
                         {message.authorUsername} -{" "}
                         {this.formatDate(message.writtenOnDate)}
                       </Typography>
-                      <Typography>{message.text}</Typography>
+                      <ReactMarkdown
+                        className={styles.message}
+                        options={this.options}
+                      >
+                        {message.text}
+                      </ReactMarkdown>
                     </div>
                   ))}
                 </div>

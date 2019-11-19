@@ -35,3 +35,8 @@
   /* Scrollbar on dialog content with the RTE, without this */
   padding-bottom: 18px !important;
 }
+
+.message {
+  margin-left: 32px !important;
+}
+
