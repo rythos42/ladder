@@ -21,9 +21,13 @@ class Header extends React.Component {
   };
 
   componentDidMount() {
-    const loadingTabIndex =
-      this.tabs.findIndex(tab => tab.to === this.props.location.pathname) || 0;
-    this.setState({ selectedTabIndex: loadingTabIndex });
+    const loadingTabIndex = this.tabs.findIndex(
+      tab => tab.to === this.props.location.pathname
+    );
+
+    this.setState({
+      selectedTabIndex: loadingTabIndex > -1 ? loadingTabIndex : 0
+    });
   }
 
   openAddSkillDialog = () => {
