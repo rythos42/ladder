@@ -1,25 +1,22 @@
 import React from "react";
 import { connect } from "react-redux";
+import RichTextEditor from "react-rte";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
 import Chip from "@material-ui/core/Chip";
 import CommentIcon from "@material-ui/icons/Comment";
-import AddCommentIcon from "@material-ui/icons/AddComment";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import styles from "./EndorsementDialog.module.css";
 
 class EndorsementDialog extends React.Component {
   state = {
-    message: "",
-    showMore: false
+    showMore: false,
+    editorState: RichTextEditor.createEmptyValue()
   };
 
   componentDidUpdate(prevProps) {
@@ -35,21 +32,26 @@ class EndorsementDialog extends React.Component {
       this.setState({ showMore: this.props.claim.messages.length > 5 });
   }
 
-  setMessage = evt => {
-    this.setState({ message: evt.target.value });
-  };
-
   formatDate = date => {
     return new Date(date).toDateString();
   };
 
-  addMessage = () => {
-    this.props.onAddMessage(this.state.message);
-    this.setState({ message: "" });
+  handleAddMessageClick = () => {
+    this.props.onAddMessage(this.state.editorState.toString("markdown"));
+    this.setState({ editorState: RichTextEditor.createEmptyValue() });
+  };
+
+  handleEndorseClick = () => {
+    this.props.onEndorse(this.state.editorState.toString("markdown"));
+    this.setState({ editorState: RichTextEditor.createEmptyValue() });
   };
 
   handleScroll = () => {
     this.setState({ showMore: false });
+  };
+
+  onEditorChange = editorState => {
+    this.setState({ editorState });
   };
 
   render() {
@@ -60,7 +62,7 @@ class EndorsementDialog extends React.Component {
         maxWidth="md"
         fullWidth
       >
-        <DialogContent>
+        <DialogContent className={styles.dialogContent}>
           <Card className={styles.card}>
             <Typography variant="caption">Claim </Typography>
             <Typography>{this.props.claim.claimEvidence}</Typography>
@@ -90,33 +92,20 @@ class EndorsementDialog extends React.Component {
               </div>
             </Card>
           )}
-          <TextField
-            variant="outlined"
-            value={this.state.message}
-            onChange={this.setMessage}
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="add comment"
-                    onClick={this.addMessage}
-                  >
-                    <AddCommentIcon />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
+          <RichTextEditor
+            value={this.state.editorState}
+            onChange={this.onEditorChange}
+            editorClassName={styles.editor}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose}>Cancel</Button>
+          <Button onClick={this.handleAddMessageClick} variant="outlined">
+            Add Message
+          </Button>
 
           {this.props.claim.fromUsername !== this.props.accountUsername && (
-            <Button
-              onClick={() => this.props.onEndorse(this.state.message)}
-              variant="contained"
-            >
+            <Button onClick={this.handleEndorseClick} variant="contained">
               Endorse
             </Button>
           )}

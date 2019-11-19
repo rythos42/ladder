@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import RichTextEditor from "react-rte";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -29,7 +30,7 @@ class SkillsTable extends React.Component {
   state = {
     claimSkillDialogOpen: false,
     claimingSkillId: -1,
-    claimEvidence: "",
+    editorState: RichTextEditor.createEmptyValue(),
     endorserEmails: "",
     order: "asc",
     orderBy: "Summary",
@@ -53,20 +54,21 @@ class SkillsTable extends React.Component {
     this.setState({ claimSkillDialogOpen: false });
   };
 
-  setClaimEvidence = evt => {
-    this.setState({ claimEvidence: evt.target.value });
-  };
-
   changeEmail = evt => {
     this.setState({ endorserEmails: evt.target.value });
+  };
+
+  onEditorChange = editorState => {
+    this.setState({ editorState });
   };
 
   claimSkill = () => {
     this.props.claimSkill({
       claimingSkillId: this.state.claimingSkillId,
-      claimEvidence: this.state.claimEvidence,
+      claimEvidence: this.state.editorState.toString("markdown"),
       endorserEmails: this.state.endorserEmails
     });
+    this.setState({ editorState: RichTextEditor.createEmptyValue() });
     this.closeClaimSkillDialog();
   };
 
@@ -236,12 +238,11 @@ class SkillsTable extends React.Component {
               label="Endorser E-mail(s)"
               fullWidth
             />
-            <TextField
-              multiline
-              rows={6}
-              onChange={this.setClaimEvidence}
-              label="Evidence"
-              fullWidth
+            <RichTextEditor
+              value={this.state.editorState}
+              onChange={this.onEditorChange}
+              editorClassName={styles.editor}
+              placeholder="Type evidence of your claim..."
             />
           </DialogContent>
           <DialogActions>
@@ -275,7 +276,4 @@ function mapDispatch({ application }) {
   };
 }
 
-export default connect(
-  mapState,
-  mapDispatch
-)(SkillsTable);
+export default connect(mapState, mapDispatch)(SkillsTable);

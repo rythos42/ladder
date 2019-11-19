@@ -5,3 +5,7 @@
 .filter > div {
   margin-right: 16px;
 }
+
+.editor {
+  height: 100px;
+}

@@ -26,3 +26,12 @@
   top: 0;
   left: 50%;
 }
+
+.editor {
+  height: 100px;
+}
+
+.dialogContent {
+  /* Scrollbar on dialog content with the RTE, without this */
+  padding-bottom: 18px !important;
+}
