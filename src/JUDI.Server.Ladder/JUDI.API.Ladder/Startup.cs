@@ -12,18 +12,25 @@ namespace JUDI.API.Ladder
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IHostEnvironment env)
 		{
 			Configuration = configuration;
+			Environment = env;
 		}
 
 		public IConfiguration Configuration { get; }
+		public IHostEnvironment Environment { get; }
 
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-			services.AddDbContextPool<LadderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LadderDatabase")));
+			services.AddDbContextPool<LadderDbContext>(options =>
+			{
+				options.UseSqlServer(Configuration.GetConnectionString("LadderDatabase"));
+				if (!Environment.IsDevelopment())
+					options.UseAzureAccessToken();
+			});
 
 			services.AddScoped<SkillRepository>();
 			services.AddScoped<ClaimRepository>();
